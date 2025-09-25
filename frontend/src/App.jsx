@@ -6,10 +6,16 @@ function App() {
     <div>
       <p>Hello World! </p>
     </div>
-      <div>
-      <p>Hello World! </p>
-    </div>
+    <Text/>
     </>
+  )
+}
+
+function Text(){
+  return (
+   <div>
+    <p>Hello world??</p>
+   </div>
   )
 }
 
