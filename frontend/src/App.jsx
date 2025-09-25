@@ -3,18 +3,16 @@ import './App.css'
 function App() {
   return (
     <>
-    <div>
-      <p>Hello World! </p>
-    </div>
-    <Text/>
+    <Text display= "Whats up?"/>
+    <Text display="Hello? Are you there?"/>
     </>
   )
 }
 
-function Text(){
+function Text({display}){
   return (
    <div>
-    <p>Hello world??</p>
+    <p>{display}</p>
    </div>
   )
 }
