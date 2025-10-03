@@ -24,7 +24,7 @@
 .navbar-brand a,
 .navbar-links .nav-link{
   color:#fff; text-decoration:none; font-weight:800;
-  -webkit-text-stroke:2px #000; text-shadow:0 0 1px rgba(0,0,0,.6);
+  -webkit-text-stroke:0.5px #000; text-shadow:0 0 1px rgba(0,0,0,.6);
   text-transform:uppercase; letter-spacing:.4px;
 }
 .navbar-brand a{ font-size:1.6rem; font-weight:900; letter-spacing:.5px; }

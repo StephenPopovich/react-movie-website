@@ -7,9 +7,11 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .movie-card:hover {
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.6);
   transform: translateY(-5px);
 }
 
@@ -88,7 +90,10 @@
 }
 
 .movie-info {
-  padding: 1rem;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
