@@ -1,6 +1,7 @@
 import './css/App.css';
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
+import MyTopTen from "./pages/MyTopTen";
 import NavBar from './components/NavBar';
 import { MovieProvider } from './contexts/MovieContext';
 import {Routes, Route} from 'react-router-dom';
@@ -15,6 +16,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/favorites" element={<Favorites />} />
+      <Route path="/mytopten" element={<MyTopTen />} />
     </Routes> 
     </main>
     </MovieProvider>

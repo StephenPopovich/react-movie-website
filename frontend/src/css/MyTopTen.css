@@ -1,0 +1,36 @@
+.mytopten-page {
+  padding: 1.5rem;
+}
+
+.mytopten-title {
+  font-size: 1.6rem;
+  margin: 0 0 1rem;
+  color: #fff;
+}
+
+.rank-container {
+  position: relative;
+}
+
+.rank-container > .movie-card {
+  height: 100%;
+}
+
+.rank-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: 700;
+  background: #6a0dad; /* purple */
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
