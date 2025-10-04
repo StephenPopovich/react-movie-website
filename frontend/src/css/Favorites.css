@@ -33,6 +33,11 @@
   line-height: 1.6;
 }
 
+.movies-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
 
 /* Animation for new favorites being added */
 @keyframes fadeIn {

@@ -1,0 +1,65 @@
+.movie-details {
+  padding: 1.5rem;
+  color: #fff;
+}
+
+.md-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.md-back {
+  text-decoration: none;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.md-title {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.md-content {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: 420px 1fr;
+}
+
+.md-poster {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.md-info {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.md-overview {
+  margin: 0;
+  line-height: 1.55;
+  opacity: 0.95;
+}
+
+.md-meta > div {
+  margin: 0.25rem 0;
+}
+
+.md-cast h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.md-cast ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.md-character {
+  opacity: 0.85;
+}
