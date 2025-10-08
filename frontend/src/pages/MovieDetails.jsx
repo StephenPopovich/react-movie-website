@@ -1,82 +1,206 @@
-// src/pages/MovieDetails.jsx
-import { useEffect, useState } from "react";
+// /src/pages/MovieDetails.jsx
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getMovieDetailsWithCredits } from "../services/api";
-import "../css/MovieDetails.css";
+import { getMovieDetails } from "../services/api";
+import CommentsSection from "../components/comments/CommentsSection.jsx";
+// optional: add a details stylesheet if you have one
+// import "../css/MovieDetails.css";
 
 function MovieDetails() {
-  const { id } = useParams();
+  const { id } = useParams(); // TMDB movie id from route
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    (async () => {
+    let isMounted = true;
+
+    async function load() {
+      setLoading(true);
+      setError("");
       try {
-        const data = await getMovieDetailsWithCredits(id);
-        setMovie(data);
-      } catch (e) {
-        console.error(e);
-        setError("Failed to load movie details.");
+        const data = await getMovieDetails(id);
+        if (isMounted) setMovie(data);
+      } catch (err) {
+        console.error(err);
+        if (isMounted) setError("Failed to load movie details.");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
-    })();
+    }
+
+    if (id) load();
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
-  if (loading) return <p style={{ padding: "1rem" }}>Loading…</p>;
-  if (error) return <p style={{ padding: "1rem" }}>{error}</p>;
-  if (!movie) return <p style={{ padding: "1rem" }}>No data found.</p>;
+  const posterUrl = useMemo(() => {
+    if (!movie?.poster_path) return null;
+    // use whichever TMDB size your app prefers (w342/w500/original)
+    return `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  }, [movie]);
 
-  const poster = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : null;
+  const backdropUrl = useMemo(() => {
+    if (!movie?.backdrop_path) return null;
+    return `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+  }, [movie]);
 
-  const director =
-    movie.credits?.crew?.find((p) => p.job === "Director")?.name || "Unknown";
+  const title = movie?.title || movie?.name || "Untitled";
+  const releaseDate = movie?.release_date || movie?.first_air_date || null;
 
-  const topCast = (movie.credits?.cast || []).slice(0, 8);
+  const formattedReleaseDate = useMemo(() => {
+    if (!releaseDate) return "—";
+    try {
+      return new Date(releaseDate).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return releaseDate;
+    }
+  }, [releaseDate]);
+
+  const runtimeText = useMemo(() => {
+    const minutes = movie?.runtime;
+    if (!minutes && minutes !== 0) return "—";
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    if (h <= 0) return `${m}m`;
+    if (m <= 0) return `${h}h`;
+    return `${h}h ${m}m`;
+  }, [movie]);
+
+  if (loading) {
+    return (
+      <div className="movie-details loading">
+        <p>Loading movie…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="movie-details error">
+        <p>{error}</p>
+        <Link to="/" className="back-link">← Back</Link>
+      </div>
+    );
+  }
+
+  if (!movie) {
+    return (
+      <div className="movie-details empty">
+        <p>Movie not found.</p>
+        <Link to="/" className="back-link">← Back</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="movie-details">
-      <div className="md-header">
-        <Link to="/" className="md-back">← Back</Link>
-        <h2 className="md-title">
-          {movie.title}{" "}
-          {movie.release_date ? `(${movie.release_date.slice(0, 4)})` : ""}
-        </h2>
-      </div>
+      {/* Backdrop header (optional) */}
+      {backdropUrl && (
+        <div
+          className="backdrop"
+          style={{
+            backgroundImage: `linear-gradient(to top, rgba(0,0,0,.85) 10%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.1) 100%), url(${backdropUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            width: "100%",
+            minHeight: "260px",
+            borderBottom: "1px solid rgba(255,255,255,0.08)",
+          }}
+        />
+      )}
 
-      <div className="md-content">
-        {poster && <img className="md-poster" src={poster} alt={movie.title} />}
-
-        <div className="md-info">
-          <p className="md-overview">{movie.overview || "No overview."}</p>
-
-          <div className="md-meta">
-            <div><strong>Director:</strong> {director}</div>
-            <div><strong>Runtime:</strong> {movie.runtime ? `${movie.runtime} min` : "N/A"}</div>
-            <div><strong>Genres:</strong> {(movie.genres || []).map(g => g.name).join(", ") || "N/A"}</div>
-            {movie.release_date && (
-              <div><strong>Released:</strong> {new Date(movie.release_date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}</div>
-            )}
-          </div>
-
-          <div className="md-cast">
-            <h3>Top Cast</h3>
-            <ul>
-              {topCast.map((p) => (
-                <li key={p.cast_id || `${p.id}-${p.credit_id}`}>
-                  {p.name} <span className="md-character">as {p.character}</span>
-                </li>
-              ))}
-            </ul>
+      <div
+        className="details-container"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "160px 1fr",
+          gap: "1.25rem",
+          padding: "1.25rem",
+        }}
+      >
+        {/* Poster */}
+        <div>
+          {posterUrl ? (
+            <img
+              src={posterUrl}
+              alt={`${title} poster`}
+              style={{
+                width: "100%",
+                height: "auto",
+                borderRadius: "12px",
+                boxShadow: "0 6px 24px rgba(0,0,0,0.35)",
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "2/3",
+                borderRadius: "12px",
+                background: "#1d1d1d",
+                display: "grid",
+                placeItems: "center",
+                color: "#aaa",
+                fontSize: ".9rem",
+              }}
+            >
+              No image
+            </div>
+          )}
+          <div style={{ marginTop: "0.75rem" }}>
+            <Link to="/" className="back-link" style={{ color: "#9bd" }}>
+              ← Back
+            </Link>
           </div>
         </div>
+
+        {/* Main info */}
+        <div>
+          <h1 style={{ margin: "0 0 .25rem" }}>{title}</h1>
+
+          <div
+            className="meta"
+            style={{ opacity: 0.85, display: "flex", gap: "1rem", flexWrap: "wrap" }}
+          >
+            <span><strong>Release:</strong> {formattedReleaseDate}</span>
+            {movie?.runtime ? <span><strong>Runtime:</strong> {runtimeText}</span> : null}
+            {movie?.vote_average ? (
+              <span>
+                <strong>Rating:</strong> {Number(movie.vote_average).toFixed(1)}
+              </span>
+            ) : null}
+            {movie?.genres?.length ? (
+              <span>
+                <strong>Genres:</strong>{" "}
+                {movie.genres.map((g) => g.name).join(", ")}
+              </span>
+            ) : null}
+          </div>
+
+          {movie?.tagline ? (
+            <p style={{ marginTop: ".75rem", fontStyle: "italic", opacity: 0.9 }}>
+              “{movie.tagline}”
+            </p>
+          ) : null}
+
+          {movie?.overview ? (
+            <div style={{ marginTop: ".75rem", lineHeight: 1.6 }}>
+              <h3 style={{ marginBottom: ".25rem" }}>Overview</h3>
+              <p>{movie.overview}</p>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Comments (localStorage) */}
+      <div style={{ padding: "0 1.25rem 1.25rem" }}>
+        <CommentsSection movieId={movie.id} title={title} />
       </div>
     </div>
   );
