@@ -1,10 +1,13 @@
-// /src/components/comments/CommentsSection.jsx
 import { useMemo, useCallback } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage.js";
-import { uid as genId } from "../../utils/comments.js";
 import CommentForm from "./CommentForm.jsx";
 import CommentItem from "./CommentItem.jsx";
+// match your actual filename exactly (lower/upper case)
 import "../../css/comments.css";
+
+// local id helper (replaces utils/comments.js)
+const genId = () =>
+  Math.random().toString(36).slice(2) + Date.now().toString(36);
 
 /**
  * Data model (flat):
@@ -43,7 +46,7 @@ export default function CommentsSection({ movieId, title }) {
       setComments((prev) => [
         ...prev,
         {
-          id: uid(),
+          id: genId(),
           parentId,
           author: vals.author || "Anonymous",
           text: vals.text,
@@ -76,11 +79,7 @@ export default function CommentsSection({ movieId, title }) {
       while (changed) {
         changed = false;
         for (const c of comments) {
-          if (
-            !toDelete.has(c.id) &&
-            c.parentId &&
-            toDelete.has(c.parentId)
-          ) {
+          if (!toDelete.has(c.id) && c.parentId && toDelete.has(c.parentId)) {
             toDelete.add(c.id);
             changed = true;
           }

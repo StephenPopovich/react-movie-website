@@ -3,6 +3,8 @@
 // ✅ Define API_KEY only once
 // If you want to use your .env file, uncomment this line and delete the hardcoded one:
 // const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+export { getMovieDetailsWithCredits as getMovieDetails };
+
 const API_KEY = "c4b7be3bacde1f3f3b4b315fadc95aac";
 
 const BASE_URL = "https://api.themoviedb.org/3";

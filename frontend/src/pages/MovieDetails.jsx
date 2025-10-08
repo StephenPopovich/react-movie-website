@@ -1,10 +1,8 @@
-// /src/pages/MovieDetails.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getMovieDetails } from "../services/api";
+import { getMovieDetailsWithCredits } from "../services/api.js";
 import CommentsSection from "../components/comments/CommentsSection.jsx";
-// optional: add a details stylesheet if you have one
-// import "../css/MovieDetails.css";
+// import "../css/MovieDetails.css"; // optional
 
 function MovieDetails() {
   const { id } = useParams(); // TMDB movie id from route
@@ -19,7 +17,7 @@ function MovieDetails() {
       setLoading(true);
       setError("");
       try {
-        const data = await getMovieDetails(id);
+        const data = await getMovieDetailsWithCredits(id);
         if (isMounted) setMovie(data);
       } catch (err) {
         console.error(err);
@@ -37,7 +35,6 @@ function MovieDetails() {
 
   const posterUrl = useMemo(() => {
     if (!movie?.poster_path) return null;
-    // use whichever TMDB size your app prefers (w342/w500/original)
     return `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
   }, [movie]);
 
@@ -64,7 +61,7 @@ function MovieDetails() {
 
   const runtimeText = useMemo(() => {
     const minutes = movie?.runtime;
-    if (!minutes && minutes !== 0) return "—";
+    if (minutes == null) return "—";
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
     if (h <= 0) return `${m}m`;
@@ -74,7 +71,7 @@ function MovieDetails() {
 
   if (loading) {
     return (
-      <div className="movie-details loading">
+      <div className="movie-details loading" style={{ padding: "1.25rem" }}>
         <p>Loading movie…</p>
       </div>
     );
@@ -82,18 +79,22 @@ function MovieDetails() {
 
   if (error) {
     return (
-      <div className="movie-details error">
+      <div className="movie-details error" style={{ padding: "1.25rem" }}>
         <p>{error}</p>
-        <Link to="/" className="back-link">← Back</Link>
+        <Link to="/" className="back-link" style={{ color: "#9bd" }}>
+          ← Back
+        </Link>
       </div>
     );
   }
 
   if (!movie) {
     return (
-      <div className="movie-details empty">
+      <div className="movie-details empty" style={{ padding: "1.25rem" }}>
         <p>Movie not found.</p>
-        <Link to="/" className="back-link">← Back</Link>
+        <Link to="/" className="back-link" style={{ color: "#9bd" }}>
+          ← Back
+        </Link>
       </div>
     );
   }
@@ -164,12 +165,15 @@ function MovieDetails() {
         <div>
           <h1 style={{ margin: "0 0 .25rem" }}>{title}</h1>
 
+          {/* ✅ fixed span/strong nesting */}
           <div
             className="meta"
             style={{ opacity: 0.85, display: "flex", gap: "1rem", flexWrap: "wrap" }}
           >
             <span><strong>Release:</strong> {formattedReleaseDate}</span>
-            {movie?.runtime ? <span><strong>Runtime:</strong> {runtimeText}</span> : null}
+            {movie?.runtime ? (
+              <span><strong>Runtime:</strong> {runtimeText}</span>
+            ) : null}
             {movie?.vote_average ? (
               <span>
                 <strong>Rating:</strong> {Number(movie.vote_average).toFixed(1)}
@@ -177,8 +181,7 @@ function MovieDetails() {
             ) : null}
             {movie?.genres?.length ? (
               <span>
-                <strong>Genres:</strong>{" "}
-                {movie.genres.map((g) => g.name).join(", ")}
+                <strong>Genres:</strong> {movie.genres.map((g) => g.name).join(", ")}
               </span>
             ) : null}
           </div>
