@@ -1,4 +1,4 @@
-// src/App.jsx
+// frontend/src/App.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -8,7 +8,7 @@ import MovieDetails from "./pages/MovieDetails";
 import Favorites from "./pages/Favorites";
 import AllMovies from "./pages/AllMovies";
 
-// ✅ Only one import of MovieProvider, at the top
+// ✅ One import, at the top, path must match the file we just created
 import { MovieProvider } from "./context/MovieContext";
 
 export default function App() {

@@ -1,4 +1,4 @@
-// src/context/MovieContext.jsx
+// frontend/src/context/MovieContext.jsx
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const MovieContext = createContext(null);

@@ -1,11 +1,9 @@
-// src/services/api.js
+// frontend/src/services/api.js
 
-// --- TMDB constants (keep your hardcoded key) ---
 const API_KEY = "c4b7be3bacde1f3f3b4b315fadc95aac";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
 
-// --- helpers ---
 function withParams(path, params = {}) {
   const sp = new URLSearchParams({
     api_key: API_KEY,
@@ -21,18 +19,25 @@ function mapMovie(m) {
     ...m,
     poster_path: m?.poster_path ? IMG_BASE + m.poster_path : null,
     backdrop_path: m?.backdrop_path ? IMG_BASE + m.backdrop_path : null,
+    title: m?.title ?? m?.name ?? "", // some TMDB responses use "name"
   };
 }
 
-// ==============================
-// Popular / Top Rated / Upcoming
-// (existing pages rely on these)
-// ==============================
+async function fetchJson(url, label) {
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  const data = await res.json().catch(() => ({}));
+  // Helpful debug (shows status and any TMDB error message)
+  console.log(`[api] ${label}`, res.status, data);
+  if (!res.ok) {
+    const msg = data?.status_message || `HTTP ${res.status}`;
+    throw new Error(`${label} failed: ${msg}`);
+  }
+  return data;
+}
+
+// ============== Popular / Top / Upcoming (Home & others) ==============
 export async function getPopularMovies(page = 1) {
-  const url = withParams("/movie/popular", { page });
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch popular: ${res.status}`);
-  const data = await res.json();
+  const data = await fetchJson(withParams("/movie/popular", { page }), "popular");
   return {
     ...data,
     results: Array.isArray(data.results) ? data.results.map(mapMovie) : [],
@@ -41,10 +46,7 @@ export async function getPopularMovies(page = 1) {
 }
 
 export async function getTopRatedMovies(page = 1) {
-  const url = withParams("/movie/top_rated", { page });
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch top rated: ${res.status}`);
-  const data = await res.json();
+  const data = await fetchJson(withParams("/movie/top_rated", { page }), "top_rated");
   return {
     ...data,
     results: Array.isArray(data.results) ? data.results.map(mapMovie) : [],
@@ -53,10 +55,7 @@ export async function getTopRatedMovies(page = 1) {
 }
 
 export async function getUpcomingMovies(page = 1) {
-  const url = withParams("/movie/upcoming", { page });
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch upcoming: ${res.status}`);
-  const data = await res.json();
+  const data = await fetchJson(withParams("/movie/upcoming", { page }), "upcoming");
   return {
     ...data,
     results: Array.isArray(data.results) ? data.results.map(mapMovie) : [],
@@ -64,14 +63,9 @@ export async function getUpcomingMovies(page = 1) {
   };
 }
 
-// ==============================
-// Search (used by MyTopTen, etc.)
-// ==============================
+// =============================== Search (MyTopTen, etc.) ===============================
 export async function searchMovies(query = "", page = 1) {
-  const url = withParams("/search/movie", { page, query });
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to search: ${res.status}`);
-  const data = await res.json();
+  const data = await fetchJson(withParams("/search/movie", { page, query }), "search");
   return {
     ...data,
     results: Array.isArray(data.results) ? data.results.map(mapMovie) : [],
@@ -79,25 +73,12 @@ export async function searchMovies(query = "", page = 1) {
   };
 }
 
-// ======================================
-// All Movies helpers (discover + genres)
-// ======================================
-export async function getMovies({
-  page = 1,
-  query = "",
-  sortBy = "popularity.desc",
-  genreId = "",
-} = {}) {
+// =========================== All Movies (discover + genres) ===========================
+export async function getMovies({ page = 1, query = "", sortBy = "popularity.desc", genreId = "" } = {}) {
   const isSearch = query.trim().length > 0;
   const path = isSearch ? "/search/movie" : "/discover/movie";
-  const params = isSearch
-    ? { page, query }
-    : { page, sort_by: sortBy, with_genres: genreId || undefined };
-
-  const url = withParams(path, params);
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch movies: ${res.status}`);
-  const data = await res.json();
+  const params = isSearch ? { page, query } : { page, sort_by: sortBy, with_genres: genreId || undefined };
+  const data = await fetchJson(withParams(path, params), isSearch ? "search" : "discover");
   return {
     ...data,
     results: Array.isArray(data.results) ? data.results.map(mapMovie) : [],
@@ -106,28 +87,16 @@ export async function getMovies({
 }
 
 export async function getGenres() {
-  const url = withParams("/genre/movie/list");
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch genres: ${res.status}`);
-  const data = await res.json();
+  const data = await fetchJson(withParams("/genre/movie/list"), "genres");
   return Array.isArray(data.genres) ? data.genres : [];
 }
 
-// ======================================
-// Details + credits (MovieDetails page)
-// ======================================
+// ============================== Details + Credits ==============================
 export async function getMovieDetailsWithCredits(id) {
   if (!id) throw new Error("Movie id is required");
-  const [detailsRes, creditsRes] = await Promise.all([
-    fetch(withParams(`/movie/${id}`)),
-    fetch(withParams(`/movie/${id}/credits`)),
-  ]);
-  if (!detailsRes.ok) throw new Error(`Failed details: ${detailsRes.status}`);
-  if (!creditsRes.ok) throw new Error(`Failed credits: ${creditsRes.status}`);
-
   const [details, credits] = await Promise.all([
-    detailsRes.json(),
-    creditsRes.json(),
+    fetchJson(withParams(`/movie/${id}`), "details"),
+    fetchJson(withParams(`/movie/${id}/credits`), "credits"),
   ]);
   return {
     ...details,
