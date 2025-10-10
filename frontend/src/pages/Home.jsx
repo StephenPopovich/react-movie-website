@@ -1,76 +1,49 @@
+// src/pages/Home.jsx
+import React, { useEffect, useState } from "react";
+import { getPopularMovies } from "../services/api";
 import MovieCard from "../components/MovieCard";
-import { useState, useEffect } from "react";
-import { searchMovies, getPopularMovies } from "../services/api";
-import "../css/Home.css";
 
-function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default function Home() {
+  const [movies, setMovies] = useState([]);      // keep as array
+  const [page, setPage] = useState(1);           // if you use paging
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
   useEffect(() => {
-    const loadPopularMovies = async () => {
+    let ignore = false;
+    async function load() {
       try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-      } catch (err) {
-        console.log(err);
-        setError("Failed to load movies...");
+        setLoading(true);
+        setErr("");
+        const data = await getPopularMovies(page);
+        if (!ignore) setMovies(Array.isArray(data.results) ? data.results : []);
+      } catch (e) {
+        if (!ignore) setErr("Failed to load popular movies.");
+        console.error(e);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
-    };
-
-    loadPopularMovies();
-  }, []);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return
-    if (loading) return
-
-    setLoading(true)
-    try {
-        const searchResults = await searchMovies(searchQuery)
-        setMovies(searchResults)
-        setError(null)
-    } catch (err) {
-        console.log(err)
-        setError("Failed to search movies...")
-    } finally {
-        setLoading(false)
     }
-  };
+    load();
+    return () => { ignore = true; };
+  }, [page]);
 
   return (
-    <div className="home">
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Search for movies..."
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="submit" className="search-button">
-          Search
-        </button>
-      </form>
+    <div className="home-page">
+      <h1>Popular Movies</h1>
 
-        {error && <div className="error-message">{error}</div>}
+      {err && <p style={{ color: "#f66" }}>{err}</p>}
+      {loading && <p>Loading…</p>}
 
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="movies-grid">
-          {movies.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
-        </div>
-      )}
+      <div className="movie-grid">
+        {(Array.isArray(movies) ? movies : []).map((m) => (
+          <MovieCard key={m.id} movie={m} />
+        ))}
+      </div>
+
+      {/* If you already have pagination controls, keep them */}
+      {/* <button onClick={() => setPage((p) => Math.max(1, p - 1))}>Prev</button>
+          <button onClick={() => setPage((p) => p + 1)}>Next</button> */}
     </div>
   );
 }
-
-export default Home;

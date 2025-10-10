@@ -1,28 +1,27 @@
 // src/App.jsx
+import React from "react";
 import { Routes, Route } from "react-router-dom";
+
+import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
-import Favorites from "./pages/Favorites";
-import MyTopTen from "./pages/MyTopTen";
 import MovieDetails from "./pages/MovieDetails";
+import Favorites from "./pages/Favorites";
+import AllMovies from "./pages/AllMovies";
 
-// ⬇️ import your navbar (pick the one that matches your filename)
-import NavBar from "./components/NavBar"; // or: "./components/Navbar"
+// ✅ Only one import of MovieProvider, at the top
+import { MovieProvider } from "./context/MovieContext";
 
-function App() {
+export default function App() {
   return (
-    <>
-      {/* navbar shows on every page */}
+    <MovieProvider>
       <NavBar />
-
-      {/* page content */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/mytopten" element={<MyTopTen />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/movies" element={<AllMovies />} />
+        <Route path="*" element={<Home />} />
       </Routes>
-    </>
+    </MovieProvider>
   );
 }
-
-export default App;

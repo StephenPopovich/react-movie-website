@@ -102,7 +102,9 @@
 
 .movie-info h3 {
   font-size: 1rem;
+  line-height: 18px !important;
   margin: 0;
+  color: #fff;
 }
 
 .movie-info p {

@@ -1,41 +1,39 @@
-import {createContext, useState, useContext, useEffect} from "react";
-const MovieContext = createContext()
+// src/context/MovieContext.jsx
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-export const useMovieContext = () => useContext(MovieContext)
+const MovieContext = createContext(null);
 
-export const MovieProvider = ({ children }) => {
-    const [favorites, setFavorites] = useState([])
-
-    useEffect(()=> {
-        const storedFavs = localStorage.getItem("favorites")
-
-        if (storedFavs) setFavorites(JSON.parse(storedFavs))
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem('favorites', JSON.stringify(favorites))
-    }, [favorites])
-
-    const addToFavorites = (movie) => {
-        setFavorites(prev => [...prev, movie])
+export function MovieProvider({ children }) {
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const raw = localStorage.getItem("favorites");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
     }
-    
-    const removeFromFavorites = (movieId) => {
-        setFavorites(prev => prev.filter(movie => movie.id !== movieId ))
-    }
+  });
 
-    const isFavorite = (movieId) => {
-        return favorites.some(movie => movie.id === movieId)
-    }
+  useEffect(() => {
+    try {
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    } catch {}
+  }, [favorites]);
 
-    const value = {
-        favorites,
-        addToFavorites,
-        removeFromFavorites,
-        isFavorite
-    }
+  const isFavorite = (id) => favorites.some((m) => m?.id === id);
+  const toggleFavorite = (movie) => {
+    if (!movie || !movie.id) return;
+    setFavorites((prev) => {
+      const exists = prev.some((m) => m.id === movie.id);
+      return exists ? prev.filter((m) => m.id !== movie.id) : [...prev, movie];
+    });
+  };
 
-    return <MovieContext.Provider value={value}>
-     {children}
-    </MovieContext.Provider>
+  const value = useMemo(() => ({ favorites, isFavorite, toggleFavorite }), [favorites]);
+
+  return <MovieContext.Provider value={value}>{children}</MovieContext.Provider>;
+}
+
+export function useMovieContext() {
+  const ctx = useContext(MovieContext);
+  return ctx || { favorites: [], isFavorite: () => false, toggleFavorite: () => {} };
 }
