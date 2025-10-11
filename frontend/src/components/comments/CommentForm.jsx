@@ -16,14 +16,14 @@ export default function CommentForm({
 
   return (
     <form className="comment-form" onSubmit={submit}>
-      <input
+      <input className="name-input"
         type="text"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
         placeholder="Name (optional)"
         aria-label="author"
       />
-      <textarea
+      <textarea className="comment-form-input"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder={placeholder}

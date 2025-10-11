@@ -1,212 +1,115 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getMovieDetailsWithCredits } from "../services/api.js";
-import CommentsSection from "../components/comments/CommentsSection.jsx";
-// import "../css/MovieDetails.css"; // optional
+// frontend/src/pages/MovieDetails.jsx
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { getMovieDetailsWithCredits } from "../services/api";
+import CommentsSection from "../components/comments/CommentsSection.jsx"; // <-- exact path & name
+import "../css/MovieDetails.css";
 
-function MovieDetails() {
-  const { id } = useParams(); // TMDB movie id from route
+export default function MovieDetails() {
+  const { id } = useParams();
   const [movie, setMovie] = useState(null);
+  const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function load() {
-      setLoading(true);
-      setError("");
+    let ignore = false;
+    (async () => {
       try {
+        setLoading(true);
+        setErr("");
         const data = await getMovieDetailsWithCredits(id);
-        if (isMounted) setMovie(data);
-      } catch (err) {
-        console.error(err);
-        if (isMounted) setError("Failed to load movie details.");
+        if (!ignore) setMovie(data);
+      } catch (e) {
+        if (!ignore) setErr(e.message || "Failed to load movie details.");
+        console.error(e);
       } finally {
-        if (isMounted) setLoading(false);
+        if (!ignore) setLoading(false);
       }
-    }
-
-    if (id) load();
+    })();
     return () => {
-      isMounted = false;
+      ignore = true;
     };
   }, [id]);
 
-  const posterUrl = useMemo(() => {
-    if (!movie?.poster_path) return null;
-    return `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  const topCast = useMemo(() => {
+    return Array.isArray(movie?.credits?.cast) ? movie.credits.cast.slice(0, 8) : [];
   }, [movie]);
-
-  const backdropUrl = useMemo(() => {
-    if (!movie?.backdrop_path) return null;
-    return `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
-  }, [movie]);
-
-  const title = movie?.title || movie?.name || "Untitled";
-  const releaseDate = movie?.release_date || movie?.first_air_date || null;
 
   const formattedReleaseDate = useMemo(() => {
-    if (!releaseDate) return "—";
-    try {
-      return new Date(releaseDate).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch {
-      return releaseDate;
-    }
-  }, [releaseDate]);
-
-  const runtimeText = useMemo(() => {
-    const minutes = movie?.runtime;
-    if (minutes == null) return "—";
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    if (h <= 0) return `${m}m`;
-    if (m <= 0) return `${h}h`;
-    return `${h}h ${m}m`;
+    if (!movie?.release_date) return null;
+    const d = new Date(movie.release_date);
+    return isNaN(d)
+      ? movie.release_date
+      : d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   }, [movie]);
 
-  if (loading) {
-    return (
-      <div className="movie-details loading" style={{ padding: "1.25rem" }}>
-        <p>Loading movie…</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="movie-details error" style={{ padding: "1.25rem" }}>
-        <p>{error}</p>
-        <Link to="/" className="back-link" style={{ color: "#9bd" }}>
-          ← Back
-        </Link>
-      </div>
-    );
-  }
-
-  if (!movie) {
-    return (
-      <div className="movie-details empty" style={{ padding: "1.25rem" }}>
-        <p>Movie not found.</p>
-        <Link to="/" className="back-link" style={{ color: "#9bd" }}>
-          ← Back
-        </Link>
-      </div>
-    );
-  }
+  if (loading) return <div className="mdp-page mdp-status">Loading…</div>;
+  if (err) return <div className="mdp-page mdp-status mdp-error">{err}</div>;
+  if (!movie) return null;
 
   return (
-    <div className="movie-details">
-      {/* Backdrop header (optional) */}
-      {backdropUrl && (
-        <div
-          className="backdrop"
-          style={{
-            backgroundImage: `linear-gradient(to top, rgba(0,0,0,.85) 10%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.1) 100%), url(${backdropUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            width: "100%",
-            minHeight: "260px",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
-          }}
-        />
+    <div className="mdp-page">
+      <h1 className="mdp-title">{movie.title}</h1>
+
+      <div className="mdp-header">
+        <div className="mdp-poster">
+          {movie.poster_path ? (
+            <img src={movie.poster_path} alt={movie.title} />
+          ) : (
+            <div className="mdp-noimage">No Image</div>
+          )}
+        </div>
+
+        <div className="mdp-meta">
+          {movie.overview && <p className="mdp-overview">{movie.overview}</p>}
+
+          <ul className="mdp-facts">
+            {formattedReleaseDate && (
+              <li>
+                <span className="mdp-fact-label">Release:</span>{" "}
+                <span className="mdp-fact-value">{formattedReleaseDate}</span>
+              </li>
+            )}
+            {typeof movie.vote_average === "number" && (
+              <li>
+                <span className="mdp-fact-label">Rating:</span>{" "}
+                <span className="mdp-fact-value">{movie.vote_average.toFixed(1)}</span>
+              </li>
+            )}
+            {movie.runtime ? (
+              <li>
+                <span className="mdp-fact-label">Runtime:</span>{" "}
+                <span className="mdp-fact-value">{movie.runtime} min</span>
+              </li>
+            ) : null}
+            {!!movie.genres?.length && (
+              <li>
+                <span className="mdp-fact-label">Genres:</span>{" "}
+                <span className="mdp-fact-value">
+                  {movie.genres.map((g) => g.name).join(", ")}
+                </span>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+
+      {topCast.length > 0 && (
+        <>
+          <h2 className="mdp-subtitle">Top Cast</h2>
+          <ul className="mdp-cast">
+            {topCast.map((p) => (
+              <li key={p.cast_id ?? `${p.id}-${p.credit_id}`} className="mdp-cast-item">
+                <div className="mdp-cast-name">{p.name}</div>
+                <div className="mdp-cast-character">{p.character}</div>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
-      <div
-        className="details-container"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "160px 1fr",
-          gap: "1.25rem",
-          padding: "1.25rem",
-        }}
-      >
-        {/* Poster */}
-        <div>
-          {posterUrl ? (
-            <img
-              src={posterUrl}
-              alt={`${title} poster`}
-              style={{
-                width: "100%",
-                height: "auto",
-                borderRadius: "12px",
-                boxShadow: "0 6px 24px rgba(0,0,0,0.35)",
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                width: "100%",
-                aspectRatio: "2/3",
-                borderRadius: "12px",
-                background: "#1d1d1d",
-                display: "grid",
-                placeItems: "center",
-                color: "#aaa",
-                fontSize: ".9rem",
-              }}
-            >
-              No image
-            </div>
-          )}
-          <div style={{ marginTop: "0.75rem" }}>
-            <Link to="/" className="back-link" style={{ color: "#9bd" }}>
-              ← Back
-            </Link>
-          </div>
-        </div>
-
-        {/* Main info */}
-        <div>
-          <h1 style={{ margin: "0 0 .25rem" }}>{title}</h1>
-
-          {/* ✅ fixed span/strong nesting */}
-          <div
-            className="meta"
-            style={{ opacity: 0.85, display: "flex", gap: "1rem", flexWrap: "wrap" }}
-          >
-            <span><strong>Release:</strong> {formattedReleaseDate}</span>
-            {movie?.runtime ? (
-              <span><strong>Runtime:</strong> {runtimeText}</span>
-            ) : null}
-            {movie?.vote_average ? (
-              <span>
-                <strong>Rating:</strong> {Number(movie.vote_average).toFixed(1)}
-              </span>
-            ) : null}
-            {movie?.genres?.length ? (
-              <span>
-                <strong>Genres:</strong> {movie.genres.map((g) => g.name).join(", ")}
-              </span>
-            ) : null}
-          </div>
-
-          {movie?.tagline ? (
-            <p style={{ marginTop: ".75rem", fontStyle: "italic", opacity: 0.9 }}>
-              “{movie.tagline}”
-            </p>
-          ) : null}
-
-          {movie?.overview ? (
-            <div style={{ marginTop: ".75rem", lineHeight: 1.6 }}>
-              <h3 style={{ marginBottom: ".25rem" }}>Overview</h3>
-              <p>{movie.overview}</p>
-            </div>
-          ) : null}
-        </div>
-      </div>
-
-      {/* Comments (localStorage) */}
-      <div style={{ padding: "0 1.25rem 1.25rem" }}>
-        <CommentsSection movieId={movie.id} title={title} />
-      </div>
+      {/* Use your original comments system, unchanged styling */}
+      <CommentsSection movieId={id} id={id} movie={movie} />
     </div>
   );
 }
-
-export default MovieDetails;

@@ -1,98 +1,64 @@
+// frontend/src/components/MovieCard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { useMovieContext } from "../context/MovieContext"; // <- exact casing and path
+import { useMovieContext } from "../context/MovieContext";
+import "../css/MovieCard.css";
+
 export default function MovieCard({ movie }) {
-  if (!movie) {
-    return (
-      <div style={{ color: "#fff", background: "#111", padding: 12, borderRadius: 8 }}>
-        Invalid movie data
-      </div>
-    );
-  }
+  const { isFavorite, toggleFavorite } = useMovieContext();
 
-  // Safe context usage (prevents crashes if provider not mounted)
-  let ctx = null;
-  try {
-    ctx = typeof useMovieContext === "function" ? useMovieContext() : null;
-  } catch {
-    ctx = null;
-  }
+  // Format date nicely
+  const formatReleaseDate = (dateString) => {
+    if (!dateString) return null;
+    const d = new Date(dateString);
+    if (isNaN(d)) return dateString;
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  };
 
-  const isFav = ctx && typeof ctx.isFavorite === "function" ? ctx.isFavorite(movie.id) : false;
-  const toggleFavorite =
-    ctx && typeof ctx.toggleFavorite === "function" ? ctx.toggleFavorite : () => {};
+  const handleFavoriteClick = (e) => {
+    // Prevent the parent <Link> from navigating
+    e.preventDefault();
+    e.stopPropagation();
+    // ✅ pass the FULL movie object (your original favorites expect this)
+    toggleFavorite(movie);
+  };
 
-  const title = movie.title || movie.name || "Untitled";
-  const poster = movie.poster_path || ""; // api maps to full URL or null
+  const fav = isFavorite(movie.id);
 
   return (
-    <div
-      className="movie-card"
-      style={{
-        background: "#111",
-        borderRadius: 10,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Link
-        to={`/movie/${movie.id}`}
-        style={{ display: "block", textDecoration: "none", color: "inherit" }}
-      >
-        {poster ? (
-          <img
-            src={poster}
-            alt={title}
-            loading="lazy"
-            style={{
-              width: "100%",
-              display: "block",
-              aspectRatio: "2/3",
-              objectFit: "cover",
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              aspectRatio: "2/3",
-              background: "#222",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#aaa",
-              fontSize: 14,
-            }}
-          >
-            No Image
-          </div>
-        )}
-        <div style={{ padding: "0.6rem 0.75rem" }}>
-          <div style={{ fontWeight: 600, fontSize: 14, lineHeight: 1.25, color: "#fff" }}>
-            {title}
-          </div>
-          <div style={{ opacity: 0.8, fontSize: 12, marginTop: 4, color: "#ddd" }}>
+    <div className="movie-card">
+      <Link to={`/movie/${movie.id}`} className="movie-link">
+        <img
+          src={movie.poster_path || "/no-image.jpg"}
+          alt={movie.title}
+          className="movie-poster"
+          loading="lazy"
+        />
+
+        <div className="movie-info">
+          <h3 className="movie-title">{movie.title}</h3>
+
+          {/* Rating */}
+          <p className="movie-rating">
             ⭐ {typeof movie.vote_average === "number" ? movie.vote_average.toFixed(1) : "N/A"}
-          </div>
+          </p>
+
+          {/* Full release date under rating */}
+          {movie.release_date && (
+            <p className="movie-release-date">{formatReleaseDate(movie.release_date)}</p>
+          )}
         </div>
       </Link>
 
+      {/* Favorite star */}
       <button
-        onClick={() => toggleFavorite(movie)}
-        aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
-        style={{
-          margin: "0.5rem 0.75rem 0.75rem",
-          width: "calc(100% - 1.5rem)",
-          border: "none",
-          borderRadius: 8,
-          padding: "0.5rem 0.7rem",
-          cursor: "pointer",
-          background: isFav ? "#ff6b6b" : "#1f1f1f",
-          color: "#fff",
-        }}
+        type="button"
+        className={`favorite-btn ${fav ? "active" : ""}`}
+        aria-pressed={fav ? "true" : "false"}
+        aria-label={fav ? "Remove from favorites" : "Add to favorites"}
+        onClick={handleFavoriteClick}
       >
-        {isFav ? "★ In Favorites" : "☆ Add to Favorites"}
+        {fav ? "★" : "☆"}
       </button>
     </div>
   );
