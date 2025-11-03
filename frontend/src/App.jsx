@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
 import Favorites from "./pages/Favorites";
 import AllMovies from "./pages/AllMovies";
+import MyTopTen from "./pages/MyTopTen";
 
 // ✅ One import, at the top, path must match the file we just created
 import { MovieProvider } from "./context/MovieContext";
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/movies" element={<AllMovies />} />
+        <Route path="/mytopten" element={<MyTopTen />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </MovieProvider>
