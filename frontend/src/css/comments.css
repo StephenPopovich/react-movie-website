@@ -1,17 +1,35 @@
 /* frontend/src/css/Comments.css */
 
+.comments-wrap h2{
+  margin-bottom: 1.5rem;
+}
+
+.comment-form{
+ display: inline-grid;
+}
+
+.name-input{
+ background: #111;
+ margin-bottom: 2rem;
+ border: 4px groove #be91de;
+ padding: .25rem;
+}
+
 .comments-section {
-  margin-top: 2rem;
+  margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #333;
 }
 
 .comment-form textarea,
 .reply-box textarea {
-  width: 100%;
+  margin-bottom: 1rem;
+  width: 500px;
+  min-height: 150px;
   background: #111;
   color: #fff;
-  border: 1px solid #333;
+  border: 4px groove #be91de;
+  padding: .25rem;
   border-radius: 8px;
   padding: 0.5rem;
   resize: none;
@@ -20,12 +38,43 @@
 .comment-form button,
 .reply-box button {
   margin-top: 0.5rem;
-  background: #6c63ff;
+  background: linear-gradient(90deg, #2d004d, #a78bfa);
   color: white;
   border: none;
   border-radius: 6px;
   padding: 0.5rem 1rem;
   cursor: pointer;
+}
+
+.comment-form button:hover,
+.reply-box button:hover {
+  margin-top: 0.5rem;
+  background: linear-gradient(90deg, #a78bfa, #2d004d);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.comment-card{
+    margin-top: 1rem;
+    border: 4px groove #be91de;
+    width: fit-content;
+    padding: 1rem;
+}
+
+.comment-meta{
+  margin-bottom: 1rem;
+}
+
+.comment-meta strong{
+ color: #be91de;
+ font-size: 1.25rem;
+}
+
+.comment-text{
+ margin-left: .5rem;
 }
 
 .comment {
@@ -42,7 +91,7 @@
 .comment-actions button {
   margin-right: 0.5rem;
   background: transparent;
-  color: #aaa;
+  color: #be91de;
   border: none;
   cursor: pointer;
 }

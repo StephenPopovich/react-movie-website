@@ -30,7 +30,7 @@ export default function CommentForm({
         aria-label="comment"
       />
       <div className="row">
-        <button type="submit">Post</button>
+        <button type="submit">Comment</button>
         {onCancel && (
           <button type="button" onClick={onCancel} style={{ background: "#333" }}>
             Cancel

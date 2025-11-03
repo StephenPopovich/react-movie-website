@@ -4,11 +4,12 @@ import CommentForm from "./CommentForm.jsx";
 // local time formatter (replaces utils/comments.js)
 const formatTime = (iso) =>
   new Date(iso).toLocaleString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
+    month: "long",   // e.g., "Oct"
+    day: "numeric",   // "10"
+    year: "numeric",  // "2025"
+    hour: "numeric",  // 1–12, no leading zero
     minute: "2-digit",
+    hour12: true,     // "4:59 PM" not 24h
   });
 
 export default function CommentItem({
