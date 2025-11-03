@@ -26,8 +26,9 @@ export default function MyTopTen() {
         const resolved = [];
         for (const fav of FAVORITES) {
           const results = await searchMovies(fav.title);
+          const safeResults = Array.isArray(results) ? results : (results?.results || []);
           const match =
-            results?.find(m => m.release_date?.startsWith(String(fav.year))) ||
+            safeResults.find(m => m.release_date?.startsWith(String(fav.year))) ||
             results?.[0];
           if (match) resolved.push(match);
         }
