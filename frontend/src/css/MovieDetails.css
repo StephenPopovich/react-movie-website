@@ -86,11 +86,16 @@
   max-width: 1000px;
 }
 .mdp-cast-item {
-  background: #111;
+  background: #2d004d;
   border: 1px solid #242424;
   border-radius: 10px;
   padding: 10px;
 }
+
+.mdp-cast-item:hover {
+ background: #a78bfa !important;
+}
+
 .mdp-cast-name {
   font-weight: 600;
   color: #fff;
