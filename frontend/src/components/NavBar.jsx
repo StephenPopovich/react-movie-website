@@ -46,6 +46,7 @@ export default function NavBar() {
 
       <div className="navbar-links">
         <Link to="/" className="nav-link">Home</Link>
+        <Link to="/about" className="nav-link">About</Link>
         <Link to="/movies" className="nav-link">All Movies</Link>
         <Link to="/favorites" className="nav-link">Favorites</Link>
         <Link to="/mytopten" className="nav-link">My Top Ten</Link>
