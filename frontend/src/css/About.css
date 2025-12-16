@@ -1,7 +1,8 @@
 .about-page {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  padding-top: 6rem;
 }
 
 .about-hero h1 {
@@ -22,4 +23,18 @@
 .about-content ul {
   padding-left: 1.25rem;
   line-height: 1.6;
+}
+
+.about-page ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-page ul li {
+  padding-left: 32px;
+  margin-bottom: 12px;
+  background-image: url("/images/bullet-popcorn.png");
+  background-repeat: no-repeat;
+  background-position: left 4px;
+  background-size: 25px 25px;
 }
