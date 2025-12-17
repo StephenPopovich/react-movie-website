@@ -45,7 +45,7 @@ export default function MyTopTen() {
 
   return (
     <div className="mytopten-page">
-      <h2 className="mytopten-title">My Top Ten Movies</h2>
+      <h1 className="mytopten-title">My Top Ten Movies</h1>
       <div className="movies-grid">
         {movies.map((movie, idx) => (
           <div key={movie.id ?? `${movie.title}-${idx}`} className="rank-container">

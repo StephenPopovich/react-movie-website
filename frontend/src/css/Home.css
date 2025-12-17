@@ -1,19 +1,14 @@
-.home {
-  padding: 2rem 0;
-  width: 100%;
-  box-sizing: border-box;
-}
-
 .home-page{
   margin: 2rem;
 }
 
+.home-page h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 
-h1{
-    font-size: 2.2rem;
-    margin-top: 2.75rem;
-    margin-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
 }
+
 
 .search-form {
   max-width: 600px;

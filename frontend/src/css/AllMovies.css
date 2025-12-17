@@ -5,6 +5,10 @@
     min-height: 100vh; 
       margin: 2rem;
 }
+.all-movies-page  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
 
 .all-movies-title { 
     margin: 0 0 0.75rem 0; 
