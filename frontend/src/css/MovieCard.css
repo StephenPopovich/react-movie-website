@@ -118,6 +118,15 @@
   margin-top: auto;
 }
 
+
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+
+}
+
+/*Tablets and large phones (up to 768px) */
+
 @media (max-width: 768px) {
   .movie-card {
     font-size: 0.9rem;
@@ -132,4 +141,17 @@
     height: 32px;
     font-size: 1.2rem;
   }
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
 }

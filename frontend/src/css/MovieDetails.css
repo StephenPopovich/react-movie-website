@@ -104,3 +104,28 @@
   opacity: 0.8;
   font-size: 12px;
 }
+
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+
+}
+
+/*Tablets and large phones (up to 768px) */
+
+@media (max-width: 768px) {
+
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
+}

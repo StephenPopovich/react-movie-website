@@ -1,4 +1,5 @@
 // frontend/src/pages/Home.jsx
+import "../css/Home.css";
 import React, { useEffect, useState } from "react";
 import { getPopularMovies } from "../services/api";
 import MovieCard from "../components/MovieCard";

@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+.home-page{
+  margin: 2rem;
+}
+
+
+h1{
+    font-size: 2.2rem;
+    margin-top: 2.75rem;
+    margin-bottom: 0.75rem;
+}
+
 .search-form {
   max-width: 600px;
   margin: 0 auto 2rem;
@@ -55,13 +66,7 @@
 
 
 @media (max-width: 639px) {
-  .home {
-    padding: 1rem 0;
-  }
 
-  .search-form {
-    margin-bottom: 1rem;
-  }
 }
 
 .movies-grid {
@@ -71,4 +76,41 @@
   padding: 1rem;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+  .home {
+    padding: 1rem 0;
+  }
+
+  .search-form {
+    margin-bottom: 1rem;
+  }
+}
+
+/*Tablets and large phones (up to 768px) */
+
+@media (max-width: 768px) {
+  .home {
+    padding: 1rem 0;
+  }
+
+  .search-form {
+    margin-bottom: 1rem;
+  }
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
 }

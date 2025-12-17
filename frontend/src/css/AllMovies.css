@@ -1,9 +1,9 @@
 /* src/css/AllMovies.css */
 .all-movies-page { 
-    padding: 1.5rem 2rem; 
     color: #fff; 
-    background: #000; 
+
     min-height: 100vh; 
+      margin: 2rem;
 }
 
 .all-movies-title { 
@@ -71,4 +71,31 @@
 
 .pagination-label { 
     opacity: .85; 
+}
+
+
+
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+
+}
+
+/*Tablets and large phones (up to 768px) */
+
+@media (max-width: 768px) {
+
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
 }
