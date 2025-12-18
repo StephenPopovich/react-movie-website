@@ -1,3 +1,6 @@
+#root{
+    background: #242424;
+}
 .about-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -6,8 +9,21 @@
 }
 
 .about-hero h1 {
+    color: #fff;
     font-size: 3.2em;
     line-height: 1.1;
+}
+
+h1, h2, h3, h4, h5{
+    color: #fff;
+}
+
+p{
+    color: #fff;
+}
+
+ul{
+    color: #fff;
 }
 
 .about-hero p {

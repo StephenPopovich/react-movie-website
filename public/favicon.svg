@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background -->
+  <rect width="128" height="128" rx="20" fill="#0b0b0b"></rect>
+
+  <!-- Clapper top -->
+  <polygon points="16,28 112,16 112,36 16,48" fill="#ffffff"></polygon>
+  <polygon points="16,48 112,36 112,44 16,56" fill="#1f2933"></polygon>
+
+  <!-- Film body -->
+  <rect x="20" y="56" width="88" height="52" rx="8" fill="#111827"></rect>
+
+  <!-- Film holes -->
+  <circle cx="32" cy="82" r="4" fill="#ffffff"></circle>
+  <circle cx="32" cy="96" r="4" fill="#ffffff"></circle>
+  <circle cx="96" cy="82" r="4" fill="#ffffff"></circle>
+  <circle cx="96" cy="96" r="4" fill="#ffffff"></circle>
+
+  <!-- Play icon -->
+  <polygon points="58,72 78,82 58,92" fill="#ffffff"></polygon>
+</svg>
