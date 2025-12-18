@@ -19,7 +19,7 @@ const About = () => {
 
           <div className="col-6 col-md-6 mb-12">
             <div className="p-3 bg-dark text-white rounded">
-              Movie Card 2
+              <img className="about-logo" src="/images/movie-app-logo.png"></img>
             </div>
           </div>
 
