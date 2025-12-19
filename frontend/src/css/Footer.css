@@ -1,0 +1,44 @@
+
+.footer{
+  position:relative;
+  top:0;
+  z-index:1000;
+  background:linear-gradient(90deg,#2d004d,#a78bfa);
+  padding:1rem 2rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+  color:#fff;
+  font-family:'Anton', Impact, 'Arial Black', system-ui, sans-serif;
+  overflow:visible;
+  transition:background 220ms ease-in-out;
+}
+
+.footer:hover{ 
+  background:linear-gradient(270deg,#2d004d,#a78bfa); 
+}
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+
+}
+
+/*Tablets and large phones (up to 768px) */
+
+@media (max-width: 768px) {
+
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
+}

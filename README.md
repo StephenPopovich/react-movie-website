@@ -53,6 +53,22 @@ This project focuses on clean component structure, performance, and a polished u
 
 ---
 
+## 📁 Project Structure
+```text
+react-movie-website/
+├── frontend/
+│   ├── public/
+│   │   └── images/
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── styles/
+│       └── main.jsx
+├── README.md
+
+```  
+---
+
 ## 🔑 API Setup
 This project uses the TMDB API.
 
@@ -73,22 +89,6 @@ Favorites are stored locally using browser storage
 No backend required
 
 Built as a portfolio-ready React project
-
----
-
-## 📁 Project Structure
-text
-Copy code
-react-movie-website/
-├── frontend/
-│   ├── public/
-│   │   └── images/
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       ├── styles/
-│       └── main.jsx
-├── README.md 
 
 ---
 
