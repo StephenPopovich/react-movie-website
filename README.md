@@ -1,9 +1,30 @@
+# 📸 Screenshots
+
+<table align="center">
+  <tr>
+    <td valign="top">
+      <img src="frontend/public/images/home.webp" width="450px" alt="Home page showing trending movies" />
+    </td>
+    <td valign="top">
+      <img src="frontend/public/images/all-movies.webp" width="450px" alt="All movies browse view" />
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <img src="frontend/public/images/details.webp" width="450px" alt="Movie details page" />
+    </td>
+    <td valign="top">
+      <img src="frontend/public/images/about.webp" width="450px" alt="About page" />
+    </td>
+  </tr>
+</table>
+
 # 🎬 React Movie App
 
-A fast, modern movie discovery app built with React and Vite.  
-Browse trending movies, search titles, view details, and save favorites using real data from the TMDB API.
+A fast, modern movie discovery application built with React and Vite.  
+Users can browse trending movies, search by title, view detailed information, and save favorites using real data from the TMDB API.
 
-This project focuses on clean component structure, performance, and a polished user experience.
+This project emphasizes clean component architecture, performance, accessibility, and a polished user experience.
 
 ---
 
@@ -13,8 +34,8 @@ This project focuses on clean component structure, performance, and a polished u
 - Search movies by title
 - View detailed movie information
 - Save favorites locally
-- Responsive layout for desktop and mobile
-- Clean, modular React components
+- Fully responsive layout for desktop and mobile
+- Clean, modular React component structure
 
 ---
 
@@ -35,26 +56,3 @@ This project focuses on clean component structure, performance, and a polished u
 cd frontend
 npm install
 npm run dev
-
-## 📸 Screenshots
-
-## 📸 Screenshots
-
-### Home
-![Home page](images/home.webp)
-
-### Movie Details
-![Movie details page](images/details.webp)
-
-### Favorites
-![Favorites page](images/favorites.webp)
-
-<p align="center">
-  <img src="images/home.webp" width="45%" />
-  <img src="images/details.webp" width="45%" />
-</p>
-
-<p align="center">
-  <img src="public/images/images/my-top-ten.webp" width="45%" />
-  <img src="public/images/all-movies.webp" width="45%" />
-</p>
