@@ -1,30 +1,32 @@
-# 📸 Screenshots
+# 🎬 React Movie App
+
+A fast, modern movie discovery app built with React and Vite.  
+Browse trending movies, search titles, view details, and save favorites using real data from the TMDB API.
+
+This project focuses on clean component structure, performance, and a polished user experience.
+
+---
+
+## 📸 Screenshots
 
 <table align="center">
   <tr>
     <td valign="top">
-      <img src="frontend/public/images/home.webp" width="450px" alt="Home page showing trending movies" />
+      <img src="frontend/public/images/home.webp" width="450px" />
     </td>
     <td valign="top">
-      <img src="frontend/public/images/all-movies.webp" width="450px" alt="All movies browse view" />
+      <img src="frontend/public/images/all-movies.webp" width="450px" />
     </td>
   </tr>
   <tr>
     <td valign="top">
-      <img src="frontend/public/images/details.webp" width="450px" alt="Movie details page" />
+      <img src="frontend/public/images/details.webp" width="450px" />
     </td>
     <td valign="top">
-      <img src="frontend/public/images/about.webp" width="450px" alt="About page" />
+      <img src="frontend/public/images/about.webp" width="450px" />
     </td>
   </tr>
 </table>
-
-# 🎬 React Movie App
-
-A fast, modern movie discovery application built with React and Vite.  
-Users can browse trending movies, search by title, view detailed information, and save favorites using real data from the TMDB API.
-
-This project emphasizes clean component architecture, performance, accessibility, and a polished user experience.
 
 ---
 
@@ -34,8 +36,9 @@ This project emphasizes clean component architecture, performance, accessibility
 - Search movies by title
 - View detailed movie information
 - Save favorites locally
-- Fully responsive layout for desktop and mobile
-- Clean, modular React component structure
+- Responsive layout for desktop and mobile
+- Clean, modular React components
+- Client-side routing with React Router
 
 ---
 
@@ -50,9 +53,49 @@ This project emphasizes clean component architecture, performance, accessibility
 
 ---
 
+## 🔑 API Setup
+This project uses the TMDB API.
+
+Create a free account at https://www.themoviedb.org
+
+Generate an API key
+
+Add it to your environment variables
+
+Example:
+
+env
+Copy code
+VITE_TMDB_API_KEY=your_api_key_here
+## 📌 Notes
+Favorites are stored locally using browser storage
+
+No backend required
+
+Built as a portfolio-ready React project
+
+---
+
+## 📁 Project Structure
+text
+Copy code
+react-movie-website/
+├── frontend/
+│   ├── public/
+│   │   └── images/
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── styles/
+│       └── main.jsx
+├── README.md 
+
+---
+
 ## 🚀 Run Locally
 
 ```bash
 cd frontend
 npm install
 npm run dev
+
