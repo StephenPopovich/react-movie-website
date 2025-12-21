@@ -12,8 +12,9 @@ function Favorites() {
   if (!hasFavorites) {
     return (
       <div className="favorites-empty">
-        <h2>No Favorite Movies Yet</h2>
-        <p>Start adding movies to your favorites and they will appear here</p>
+        <p className="text-muted">
+          You have not added any favorites yet. Browse movies and click the heart icon to save them.
+        </p>
       </div>
     );
   }

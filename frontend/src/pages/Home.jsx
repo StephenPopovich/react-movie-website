@@ -31,7 +31,11 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      <h1>Popular Movies</h1>
+      <h1 className="mb-2">Popular Movies</h1>
+      <p className="text-muted mb-4">
+        Browse trending movies and add your favorites for later.
+      </p>
+
 
       {err && <p>{err}</p>}
       {loading && <p>Loading…</p>}

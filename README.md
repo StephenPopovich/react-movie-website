@@ -1,9 +1,9 @@
-# 🎬 React Movie App
+## React Movie Website
 
-A fast, modern movie discovery app built with React and Vite.  
-Browse trending movies, search titles, view details, and save favorites using real data from the TMDB API.
+A responsive movie browsing application built with React and Vite using the TMDB API.  
+This project demonstrates component-based architecture, API data fetching, loading states, and local persistence.
 
-This project focuses on clean component structure, performance, and a polished user experience.
+The active application lives in the `/frontend` directory.
 
 ---
 
@@ -78,11 +78,13 @@ Generate an API key
 
 Add it to your environment variables
 
-Example:
+Instructions:
 
-env
+add .env file to frontend folder
 Copy code
 VITE_TMDB_API_KEY=your_api_key_here
+Replace your_api_key_here with key you got from https://www.themoviedb.org
+
 ## 📌 Notes
 Favorites are stored locally using browser storage
 
@@ -92,10 +94,16 @@ Built as a portfolio-ready React project
 
 ---
 
-## 🚀 Run Locally
+## 🚀 Getting Started
 
 ```bash
 cd frontend
 npm install
 npm run dev
+```
 
+##  Environment Variables
+
+Create a .env file in /frontend:
+
+VITE_TMDB_API_KEY=your_api_key_here
