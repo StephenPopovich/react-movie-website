@@ -67,10 +67,20 @@ export default function ChatRoom() {
     listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [messages]);
 
-  function saveName() {
+  async function saveName() {
     const next = safeTrim(nameDraft);
+    if (!next) return;
+
     setDisplayName(next);
     localStorage.setItem("chat_display_name", next);
+
+    // Post a system message immediately on save
+    await addDoc(messagesRef, {
+      text: `${next} has joined the chatroom.`,
+      type: "system",
+      name: "System",
+      createdAt: serverTimestamp(),
+    });
   }
 
   async function sendMessage(e) {
@@ -134,6 +144,7 @@ export default function ChatRoom() {
               </div>
             ) : (
               messages.map((m) => {
+                const isSystem = safeTrim(m?.type) === "system";
                 const mine =
                   safeTrim(displayName) &&
                   safeTrim(m?.name) === safeTrim(displayName);
@@ -141,15 +152,25 @@ export default function ChatRoom() {
                 return (
                   <div
                     key={m.id}
-                    className={`chatroom-message ${mine ? "mine" : ""}`}
+                    className={`chatroom-message ${mine ? "mine" : ""} ${
+                      isSystem ? "system" : ""
+                    }`}
                   >
-                    <div className="chatroom-meta">
-                      <span className="chatroom-name">{m?.name || "Anon"}</span>
-                      <span className="chatroom-time">
-                        {formatTime(m?.createdAt)}
-                      </span>
-                    </div>
-                    <div className="chatroom-text">{m?.text}</div>
+                    {isSystem ? (
+                      <div className="chatroom-text">{m?.text}</div>
+                    ) : (
+                      <>
+                        <div className="chatroom-meta">
+                          <span className="chatroom-name">
+                            {m?.name || "Anon"}
+                          </span>
+                          <span className="chatroom-time">
+                            {formatTime(m?.createdAt)}
+                          </span>
+                        </div>
+                        <div className="chatroom-text">{m?.text}</div>
+                      </>
+                    )}
                   </div>
                 );
               })
