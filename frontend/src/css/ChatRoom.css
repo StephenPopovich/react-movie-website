@@ -8,10 +8,15 @@
 .chatroom-card {
   width: 100%;
   max-width: 980px;
-  background: #0b0b12;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  min-height: 560px;
   border-radius: 16px;
   overflow: hidden;
+
+  background-image: url("/images/movie-theater-background.jpg");
+  background-repeat: no-repeat;
+    background-size: 135%;
+    background-position: -175px -10px;
 }
 
 .chatroom-header {
@@ -36,6 +41,7 @@
 
 .chatroom-namebox {
   min-width: 320px;
+  margin-top: -1rem;
 }
 
 .chatroom-label {
@@ -49,6 +55,12 @@
   display: flex;
   gap: 0.5rem;
 }
+
+#displayName{
+  color:#fff;
+  border: 4px solid #2d004d;
+}
+
 
 .chatroom-body {
   padding: 1rem 1.25rem 1.25rem;
@@ -90,19 +102,20 @@
 }
 
 .chatroom-name {
-  color: rgba(255, 255, 255, 0.9);
+  color: #000;
   font-size: 1.2rem;
   font-weight: 700;
 }
 
 .chatroom-time {
-  color: rgba(255, 255, 255, 0.6);
+  color: #000;
 }
 
 .chatroom-text {
-  color: rgba(255, 255, 255, 0.92);
+  color: #000;
   white-space: pre-wrap;
   word-break: break-word;
+  
 }
 
 .chatroom-form {
@@ -115,15 +128,24 @@
   width: 100%;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #fff;
+  color: #000;
   padding: 0.7rem 0.8rem;
   border-radius: 12px;
   outline: none;
+  font-weight: 800;
+    border: 4px solid #2d004d;
+}
+
+.chatroom-input::placeholder{
+  color: #000;
+    font-weight: 800;
 }
 
 .chatroom-input:disabled {
   opacity: 0.6;
 }
+
+
 
 .chatroom-button {
   background: linear-gradient(90deg, #2d004d, #a78bfa);
@@ -146,8 +168,12 @@
 
 .chatroom-footnote {
   margin: 0.75rem 0 0;
-  color: rgba(255, 255, 255, 0.65);
+  color: #000;
   font-size: 0.85rem;
+  padding: .25rem;
+  background-color: #fff;
+  width: max-content !important;
+  border-radius: 25px;
 }
 
 @media (max-width: 720px) {

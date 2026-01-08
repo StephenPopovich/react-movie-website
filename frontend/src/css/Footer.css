@@ -13,6 +13,8 @@
   font-family:'Anton', Impact, 'Arial Black', system-ui, sans-serif;
   overflow:visible;
   transition:background 220ms ease-in-out;
+  -webkit-text-stroke: 0.5px #000;
+  text-shadow: 0 0 1px rgba(0, 0, 0, .6);
 }
 
 .footer:hover{ 

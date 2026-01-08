@@ -26,6 +26,11 @@ The active application lives in the `/frontend` directory.
       <img src="frontend/public/images/about.webp" width="450px" />
     </td>
   </tr>
+    <tr>
+    <td valign="top">
+      <img src="frontend/public/images/chatroom.webp" width="450px" />
+    </td>
+  </tr>
 </table>
 
 ---
@@ -102,13 +107,13 @@ npm install
 npm run dev
 ```
 
-##  Environment Variables
+## 🔀 Environment Variables
 
 Create a .env file in /frontend:
 
 VITE_TMDB_API_KEY=your_api_key_here
 
-## Realtime Chatroom
+## 💬 Realtime Chatroom
 
 This project includes a fully functional realtime chatroom built with Firebase Firestore. Messages are sent and received instantly without requiring a custom backend server.
 
@@ -151,20 +156,133 @@ Collections and documents are created automatically on first message send
 
 Firestore security rules allow read and create access for demo purposes
 
-### Local Setup Notes
 
-This feature requires Firebase environment variables to be present in a .env file:
+## 💾 Firebase Firestore Setup (Chatroom)
+### 1. Log in to Firebase Console
+
+Go to: https://console.firebase.google.com/
+
+Sign in with your Google account.
+
+###  2. Create (or select) your Firebase project
+
+If you already made one, click it in the project list.
+
+If not:
+
+Click Add project
+
+Name it (example: react-movie-website)
+
+Google Analytics: optional (you can leave it off)
+
+Click Create project
+
+### 3. Add a Web App to the project
+
+Inside your project, click the </> Web icon (Add app)
+
+App nickname: react-movie-website (or similar)
+
+Do not enable Firebase Hosting (not required)
+
+Click Register app
+
+You will see a Firebase config object (apiKey, authDomain, etc.)
+
+You will use these values in your .env file (next step)
+
+### 4. Create the Firestore Database
+
+Left sidebar: Build → Firestore Database
+
+Click Create database
+
+Choose Start in test mode for quick local development
+(You will switch rules to production-safe rules after)
+
+Pick a Firestore location (choose one close to you, any is fine)
+
+Click Enable
+
+### 5. Enable Authentication (required for secure chat rules)
+
+Left sidebar: Build → Authentication
+
+Click Get started
+
+Go to Sign-in method
+
+Enable Anonymous (fastest for demo)
+
+Optionally also enable Email/Password later
+
+6) Add Firestore Security Rules (recommended)
+
+Left sidebar: Build → Firestore Database
+
+Go to the Rules tab
+
+Paste rules like this (collection name messages):
 
 ```env
-VITE_FIREBASE_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID
-VITE_FIREBASE_STORAGE_BUCKET
-VITE_FIREBASE_MESSAGING_SENDER_ID
-VITE_FIREBASE_APP_ID
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Chat messages
+    match /rooms/{roomId}/messages/{messageId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // Claimed usernames
+    match /rooms/{roomId}/users/{userId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+  }
+}
 ```
 
-After adding or updating environment variables, restart the dev server.
+Click Publish
+
+7) Add Firebase config to your local environment
+
+In your React app root (where you run Vite), create or update .env:
+
+```env
+VITE_FIREBASE_API_KEY="..."
+VITE_FIREBASE_AUTH_DOMAIN="..."
+VITE_FIREBASE_PROJECT_ID="..."
+VITE_FIREBASE_STORAGE_BUCKET="..."
+VITE_FIREBASE_MESSAGING_SENDER_ID="..."
+VITE_FIREBASE_APP_ID="..."
+```
+
+Important:
+
+Restart your dev server after changing .env
+
+8) Run the project and test the chatroom
+
+Start the app:
+
+<ul>
+<li>npm install</li>
+
+<li>npm run dev</li>
+
+<li>Open the Chatroom page</li>
+
+<li>Pick a display name and send a message</li>
+
+Confirm it appears in Firestore:
+
+Firebase Console → Firestore Database → Data → messages
+</ul>
+
 
 > **Note**
 > The realtime chat feature requires a Firebase project with Firestore enabled.
