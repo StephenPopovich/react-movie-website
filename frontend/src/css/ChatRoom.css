@@ -187,3 +187,49 @@
     height: 360px;
   }
 }
+
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+    .chatroom-card {
+        width: 100%;
+        max-width: 980px;
+        min-height: 560px;
+        border-radius: 16px;
+        overflow: hidden;
+        background-image: url(/images/movie-theater-background.jpg);
+        background-repeat: no-repeat;
+        background-size: 604% !important;
+        background-position: -365px 4px !important;
+    }
+
+}
+
+/*Tablets and large phones (up to 768px) */
+
+@media (max-width: 768px) {
+.chatroom-card {
+    width: 100%;
+    max-width: 980px;
+    min-height: 560px;
+    border-radius: 16px;
+    overflow: hidden;
+    background-image: url(/images/movie-theater-background.jpg);
+    background-repeat: no-repeat;
+    background-size: 200%;
+    background-position: -245px 4px;
+}
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
+}
