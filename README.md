@@ -12,23 +12,22 @@ The active application lives in the `/frontend` directory.
 <table align="center">
   <tr>
     <td valign="top">
-      <img src="frontend/public/images/home.webp" width="450px" />
+      <img src="frontend/public/images/home.webp" alt="Homepage screenshot showing the top trending movies" width="450px" />
     </td>
     <td valign="top">
-      <img src="frontend/public/images/all-movies.webp" width="450px" />
+      <img src="frontend/public/images/all-movies.webp"  alt="All movies page screenshot, being able to scroll through thousands of movies"  width="450px" />
     </td>
   </tr>
   <tr>
     <td valign="top">
-      <img src="frontend/public/images/details.webp" width="450px" />
-    </td>
+      <img src="frontend/public/images/details.webp" alt="Individual movie details containing cast, release date, summary, runtime and rating"  width="450px" />
     <td valign="top">
-      <img src="frontend/public/images/about.webp" width="450px" />
+      <img src="frontend/public/images/about.webp" alt="About page screenshot talking about the purpose of this website for training purposes mainly" width="450px" />
     </td>
   </tr>
     <tr>
     <td valign="top">
-      <img src="frontend/public/images/chatroom.webp" width="450px" />
+      <img src="frontend/public/images/chatroom.webp" alt="Chatroom screenshot where users can choose a display name and chat with others" width="450px" />
     </td>
   </tr>
 </table>
