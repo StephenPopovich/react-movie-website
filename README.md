@@ -43,6 +43,9 @@ The active application lives in the `/frontend` directory.
 - Responsive layout for desktop and mobile
 - Clean, modular React components
 - Client-side routing with React Router
+- Realtime authenticated chatroom
+- Firebase Authentication (Email/Password)
+- Firebase Firestore integration
 
 ---
 
@@ -110,7 +113,35 @@ npm run dev
 
 Create a .env file in /frontend:
 
-VITE_TMDB_API_KEY=your_api_key_here
+Create a .env file in the frontend directory.
+
+Add all of the following variables:
+
+### TMDB API
+```env
+VITE_TMDB_API_KEY=your_tmdb_api_key_here
+```
+
+### Firebase Configuration
+```env
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
+```
+
+Where to get these values
+TMDB
+
+Create an account: <a href="https://www.themoviedb.org">https://www.themoviedb.org</a>
+
+Generate an API key
+
+Copy it into:
+
+VITE_TMDB_API_KEY
 
 ## 💬 Realtime Chatroom
 
@@ -119,18 +150,59 @@ This project includes a fully functional realtime chatroom built with Firebase F
 ### Features
 
 <ul>
-Realtime messaging using Firestore listeners
-
-Persistent messages stored in the cloud
-
-Display name stored locally per user
-
-Automatic message ordering by timestamp
-
-Responsive layout for desktop and mobile
-
-No authentication required for demo use
+<li>Realtime messaging using Firestore listeners</li>
+<li>Persistent messages stored in the cloud</li>
+<li>Display name stored locally per user</li>
+<li>Automatic message ordering by timestamp</li>
+<li>Responsive layout for desktop and mobile</li>
+<li>State that chat requires signed-in users</li>
 </ul>
+
+## 🔐 Authentication & User Accounts
+
+This application uses Firebase Authentication (Email and Password) to manage user accounts and secure access to the realtime chatroom.
+
+Users can create an account or sign in using the following routes:
+
+<ul>
+<li>/signup Create a new account</li>
+
+<li>/login Sign in to an existing account</li>
+
+<li>/chat Access the realtime chatroom (authenticated users only)</li>
+</ul>
+
+When a user signs up or logs in for the first time:
+
+<ul>
+<li>A Firebase Authentication user is created</li>
+
+<li>A corresponding user profile document is created in Firestore at users/{uid}</li>
+</ul>
+
+Each user profile document contains:
+
+<ul>
+<li>uid Unique user identifier from Firebase Auth</li>
+
+<li>email User email address</li>
+
+<li>displayName User chosen display name</li>
+
+<li>createdAt Account creation timestamp</li>
+</ul>
+
+Authentication is required to:
+
+<ul>
+<li>Access the chatroom</li>
+
+<li>Send and read chat messages</li>
+
+<li>Prevent anonymous access and user impersonation</li>
+</ul>
+
+This setup demonstrates a complete authentication flow, secure database access, and real-world user management using Firebase.
 
 ### Tech Used
 
@@ -191,6 +263,19 @@ You will see a Firebase config object (apiKey, authDomain, etc.)
 
 You will use these values in your .env file (next step)
 
+```env
+VITE_TMDB_API_KEY=[place your key here]
+
+VITE_FIREBASE_API_KEY=[place your key here]
+VITE_FIREBASE_AUTH_DOMAIN=[place your key here]
+VITE_FIREBASE_PROJECT_ID=[place your key here]
+VITE_FIREBASE_STORAGE_BUCKET=[place your key here]
+VITE_FIREBASE_MESSAGING_SENDER_ID=[place your key here]
+VITE_FIREBASE_APP_ID=1:[place your key here]
+
+```
+Here is a tempate you can use wit hall variables needed for your .env file. Just .env don't put anything else as the file name.
+
 ### 4. Create the Firestore Database
 
 Left sidebar: Build → Firestore Database
@@ -224,25 +309,82 @@ Go to the Rules tab
 
 Paste rules like this (collection name messages):
 
+### Firestore Security Rules
+Firestore security rules are used to protect user data and prevent unauthorized access.
+
+The rules enforce the following:
+
+<ul>
+<li>Only authenticated users can read or write data</li>
+
+Users can only read and update their own profile document at users/{uid}</li>
+
+Users cannot access or modify other users’ profiles</li>
+
+Only authenticated users can read and send chat messages</li>
+
+Chat messages are validated for ownership and content length</li>
+
+Messages cannot be edited or deleted after being created</li>
+</ul>
+
+These rules ensure:
+
+<ul>
+<li>No anonymous access to the database</li>
+
+<li>No user impersonation</li>
+
+<li>Data integrity for chat messages</li>
+
+<li>A secure, production-ready Firestore setup</li>
+
+</ul>
+
+Security rules are managed in the Firebase Console under:
+Build → Firestore Database → Rules
+
+This approach mirrors real-world backend access control without requiring a custom server.
+
 ```env
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Chat messages
-    match /rooms/{roomId}/messages/{messageId} {
-      allow read, create: if true;
-      allow update, delete: if false;
+    // ----- Users profiles -----
+    match /users/{uid} {
+      // user can read/write only their own profile doc
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.email is string
+        && request.resource.data.displayName is string;
+
+      // allow update but only on their own doc
+      allow update: if request.auth != null && request.auth.uid == uid;
+
+      // usually fine to disallow deletes
+      allow delete: if false;
     }
 
-    // Claimed usernames
-    match /rooms/{roomId}/users/{userId} {
-      allow read, create: if true;
+    // ----- Chat messages -----
+    match /messages/{messageId} {
+      allow read: if request.auth != null;
+
+      allow create: if request.auth != null
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 500
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.createdAt is timestamp;
+
       allow update, delete: if false;
     }
-
   }
 }
+
 ```
 
 Click Publish

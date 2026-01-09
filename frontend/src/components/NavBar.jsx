@@ -85,6 +85,8 @@ export default function NavBar() {
         <Link to="/favorites" className="nav-link" onClick={closeMenu}>Favorites</Link>
         <Link to="/mytopten" className="nav-link" onClick={closeMenu}>My Top Ten</Link>
         <Link to="/chat" className="nav-link" onClick={closeMenu}>Chatroom</Link>
+         <Link to="/signup" className="nav-link account-link" onClick={closeMenu}>Sign Up</Link>
+          <Link to="/login" className="nav-link account-link" onClick={closeMenu}>Login</Link>
       </div>
 
       {menuOpen && (

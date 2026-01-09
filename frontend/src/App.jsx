@@ -11,6 +11,8 @@ import AllMovies from "./pages/AllMovies";
 import MyTopTen from "./pages/MyTopTen";
 import About from "./pages/About";
 import ChatRoom from "./pages/ChatRoom";
+import Login from "./pages/Login";
+import Signup from "./pages/SignUp";
 
 import { MovieProvider } from "./context/MovieContext";
 
@@ -23,6 +25,8 @@ export default function App() {
         <main className="flex-grow-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/chat" element={<ChatRoom />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
             <Route path="/favorites" element={<Favorites />} />
