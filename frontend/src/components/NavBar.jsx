@@ -1,8 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef, useCallback, useEffect, useState } from "react";
 import "../css/Navbar.css";
+import { useAuth } from "../context/AuthContext";
 
 export default function NavBar() {
+  const navigate = useNavigate();
+  const { user, displayName, signOut } = useAuth();
+
   const rainRef = useRef(null);
   const cooldownRef = useRef(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -41,6 +45,16 @@ export default function NavBar() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  async function handleSignOut() {
+    try {
+      await signOut();
+      closeMenu();
+      navigate("/login");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth > 768) setMenuOpen(false);
@@ -57,11 +71,7 @@ export default function NavBar() {
   }, [menuOpen]);
 
   return (
-    <nav
-      className="navbar"
-      onMouseEnter={handleHover}
-      onTouchStart={handleHover}
-    >
+    <nav className="navbar" onMouseEnter={handleHover} onTouchStart={handleHover}>
       <div className="navbar-brand">
         <Link to="/" onClick={closeMenu}>Movie App</Link>
       </div>
@@ -71,7 +81,7 @@ export default function NavBar() {
         type="button"
         aria-label="Toggle menu"
         aria-expanded={menuOpen ? "true" : "false"}
-        onClick={() => setMenuOpen(v => !v)}
+        onClick={() => setMenuOpen((v) => !v)}
       >
         <span className="navbar-bar" />
         <span className="navbar-bar" />
@@ -85,8 +95,30 @@ export default function NavBar() {
         <Link to="/favorites" className="nav-link" onClick={closeMenu}>Favorites</Link>
         <Link to="/mytopten" className="nav-link" onClick={closeMenu}>My Top Ten</Link>
         <Link to="/chat" className="nav-link" onClick={closeMenu}>Chatroom</Link>
-         <Link to="/signup" className="nav-link account-link" onClick={closeMenu}>Sign Up</Link>
-          <Link to="/login" className="nav-link account-link" onClick={closeMenu}>Login</Link>
+
+        {user ? (
+          <>
+            <Link to="/profile" className="nav-link" onClick={closeMenu}>Profile</Link>
+
+            <span className="nav-link account-link" style={{ cursor: "default" }}>
+              Hello, {displayName}
+            </span>
+
+            <button
+              type="button"
+              className="nav-link account-link"
+              onClick={handleSignOut}
+              style={{ background: "none", border: "none", padding: 0 }}
+            >
+              Sign Out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/signup" className="nav-link account-link" onClick={closeMenu}>Sign Up</Link>
+            <Link to="/login" className="nav-link account-link" onClick={closeMenu}>Login</Link>
+          </>
+        )}
       </div>
 
       {menuOpen && (

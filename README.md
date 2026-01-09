@@ -265,7 +265,6 @@ You will use these values in your .env file (next step)
 
 ```env
 VITE_TMDB_API_KEY=[place your key here]
-
 VITE_FIREBASE_API_KEY=[place your key here]
 VITE_FIREBASE_AUTH_DOMAIN=[place your key here]
 VITE_FIREBASE_PROJECT_ID=[place your key here]

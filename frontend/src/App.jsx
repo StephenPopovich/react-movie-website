@@ -13,6 +13,8 @@ import About from "./pages/About";
 import ChatRoom from "./pages/ChatRoom";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import { MovieProvider } from "./context/MovieContext";
 
@@ -25,6 +27,11 @@ export default function App() {
         <main className="flex-grow-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+                </ProtectedRoute> }
+                />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/chat" element={<ChatRoom />} />
