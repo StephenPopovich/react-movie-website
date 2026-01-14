@@ -10,7 +10,7 @@ const FAVORITES = [
   { title: "Harry Potter and the Deathly Hallows: Part 2", year: 2011 },
   { title: "Star Wars: Episode III - Revenge of the Sith", year: 2005 },
   { title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001 },
-  { title: "Army of Darkness", year: 1993 },
+  { title: "Army of Darkness", year: 1992 },
   { title: "SLC Punk!", year: 1998 },
   { title: "Idiocracy", year: 2006 },
   { title: "Harry Potter and the Half-Blood Prince", year: 2009 },

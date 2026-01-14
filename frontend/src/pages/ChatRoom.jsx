@@ -10,6 +10,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { getAuth } from "firebase/auth";
 import "../css/chatroom.css";
 
 const ROOM_ID = "general";
@@ -29,6 +30,8 @@ function formatTime(ts) {
 }
 
 export default function ChatRoom() {
+  const auth = useMemo(() => getAuth(), []);
+
   const [displayName, setDisplayName] = useState(() => {
     return localStorage.getItem("chat_display_name") || "";
   });
@@ -62,7 +65,6 @@ export default function ChatRoom() {
   }, [messagesRef]);
 
   useEffect(() => {
-    // scroll to bottom when messages change
     if (!listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [messages]);
@@ -71,14 +73,20 @@ export default function ChatRoom() {
     const next = safeTrim(nameDraft);
     if (!next) return;
 
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("ChatRoom: No authenticated user. Sign in is required.");
+      return;
+    }
+
     setDisplayName(next);
     localStorage.setItem("chat_display_name", next);
 
-    // Post a system message immediately on save
     await addDoc(messagesRef, {
       text: `${next} has joined the chatroom.`,
       type: "system",
       name: "System",
+      userId: user.uid,
       createdAt: serverTimestamp(),
     });
   }
@@ -92,11 +100,18 @@ export default function ChatRoom() {
     if (!name) return;
     if (!text) return;
 
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("ChatRoom: No authenticated user. Sign in is required.");
+      return;
+    }
+
     setMessage("");
 
     await addDoc(messagesRef, {
       text,
       name,
+      userId: user.uid,
       createdAt: serverTimestamp(),
     });
   }
