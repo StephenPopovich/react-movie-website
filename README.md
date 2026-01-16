@@ -350,25 +350,43 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ----- Users profiles -----
+    // ----- User profiles -----
     match /users/{uid} {
-      // user can read/write only their own profile doc
+      // Read only your own profile
       allow read: if request.auth != null && request.auth.uid == uid;
 
+      // Create only your own profile
+      // Allow email to be missing or null for anonymous auth
       allow create: if request.auth != null
         && request.auth.uid == uid
         && request.resource.data.uid == uid
-        && request.resource.data.email is string
-        && request.resource.data.displayName is string;
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 50
+        && (
+          !("email" in request.resource.data) ||
+          request.resource.data.email == null ||
+          request.resource.data.email is string
+        );
 
-      // allow update but only on their own doc
-      allow update: if request.auth != null && request.auth.uid == uid;
+      // Update only your own profile
+      allow update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 50
+        && (
+          !("email" in request.resource.data) ||
+          request.resource.data.email == null ||
+          request.resource.data.email is string
+        );
 
-      // usually fine to disallow deletes
+      // No deletes
       allow delete: if false;
     }
 
-    // ----- Chat messages -----
+    // ----- Chat messages (top-level collection) -----
     match /messages/{messageId} {
       allow read: if request.auth != null;
 
@@ -376,8 +394,25 @@ service cloud.firestore {
         && request.resource.data.text is string
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 500
+        && request.resource.data.userId == request.auth.uid;
+
+      allow update, delete: if false;
+    }
+
+    // ----- Chat messages (room subcollection) -----
+    // Path used by your React code: rooms/{roomId}/messages/{messageId}
+    match /rooms/{roomId}/messages/{messageId} {
+      allow read: if request.auth != null;
+
+      allow create: if request.auth != null
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 500
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.createdAt is timestamp;
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 40
+        && (!("type" in request.resource.data) || request.resource.data.type in ["system"]);
 
       allow update, delete: if false;
     }
