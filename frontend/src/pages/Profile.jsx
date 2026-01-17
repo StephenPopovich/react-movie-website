@@ -36,6 +36,37 @@ function calcAgeFromDob(dob) {
   return age;
 }
 
+// Expects "YYYY-MM-DD"
+function formatDobLong(dob) {
+  if (!dob) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dob);
+  if (!m) return "";
+
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const da = Number(m[3]);
+  if (!y || mo < 1 || mo > 12 || da < 1 || da > 31) return "";
+
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December",
+  ];
+  const month = monthNames[mo - 1];
+  if (!month) return "";
+
+  const getOrdinal = (n) => {
+    if (n > 3 && n < 21) return "th";
+    switch (n % 10) {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
+    }
+  };
+
+  return `${month} ${da}${getOrdinal(da)}, ${y}`;
+}
+
 export default function Profile() {
   const { user, profile, displayName } = useAuth();
 
@@ -181,6 +212,7 @@ export default function Profile() {
 
   const savedDob = safeTrim(profile?.dateOfBirth);
   const savedAge = calcAgeFromDob(savedDob);
+  const savedDobPretty = formatDobLong(savedDob);
 
   return (
     <div className="container py-4" style={{ maxWidth: 720 }}>
@@ -209,7 +241,7 @@ export default function Profile() {
 
               <div className="mb-1">
                 <strong>Date of birth:</strong>{" "}
-                {savedDob ? savedDob : "Not set"}
+                {savedDob ? (savedDobPretty || savedDob) : "Not set"}
               </div>
               <div className="mb-1">
                 <strong>Age:</strong>{" "}
