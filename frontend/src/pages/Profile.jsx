@@ -80,6 +80,9 @@ export default function Profile() {
   const [stateRegion, setStateRegion] = useState("");
   const [city, setCity] = useState("");
 
+  // NEW: Bio field
+  const [bio, setBio] = useState("");
+
   // UI state
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
@@ -92,6 +95,9 @@ export default function Profile() {
     setCountry(profile?.country || "");
     setStateRegion(profile?.stateRegion || "");
     setCity(profile?.city || "");
+
+    // NEW: keep bio in sync
+    setBio(profile?.bio || "");
 
     // If profile appears for the first time, stop forcing editing view
     if (profile) setEditing(false);
@@ -124,6 +130,9 @@ export default function Profile() {
     const st = safeTrim(stateRegion);
     const ci = safeTrim(city);
 
+    // NEW: bio validation
+    const nextBio = safeTrim(bio);
+
     if (!nextName) return "Display name is required.";
 
     if (dob) {
@@ -136,6 +145,9 @@ export default function Profile() {
     if (co.length > 56) return "Country is too long.";
     if (st.length > 56) return "State/Region is too long.";
     if (ci.length > 56) return "City is too long.";
+
+    // NEW: limit bio length
+    if (nextBio.length > 500) return "Bio is too long (max 500 characters).";
 
     return "";
   }
@@ -169,6 +181,9 @@ export default function Profile() {
         country: safeTrim(country) || "",
         stateRegion: safeTrim(stateRegion) || "",
         city: safeTrim(city) || "",
+
+        // NEW: bio saved to Firestore
+        bio: safeTrim(bio) || "",
       };
 
       if (!profile) {
@@ -207,12 +222,18 @@ export default function Profile() {
     setStateRegion(profile?.stateRegion || "");
     setCity(profile?.city || "");
 
+    // NEW: revert bio too
+    setBio(profile?.bio || "");
+
     setEditing(false);
   }
 
   const savedDob = safeTrim(profile?.dateOfBirth);
   const savedAge = calcAgeFromDob(savedDob);
   const savedDobPretty = formatDobLong(savedDob);
+
+  // NEW: saved bio for display
+  const savedBio = safeTrim(profile?.bio);
 
   return (
     <div className="container py-4" style={{ maxWidth: 720 }}>
@@ -249,6 +270,14 @@ export default function Profile() {
               </div>
               <div className="mb-1">
                 <strong>Location:</strong> {locationText}
+              </div>
+
+              {/* NEW: BIO DISPLAY */}
+              <div className="mt-3">
+                <strong>Bio:</strong>
+                <div className="mt-1" style={{ whiteSpace: "pre-wrap" }}>
+                  {savedBio ? savedBio : "Not set"}
+                </div>
               </div>
             </div>
 
@@ -329,6 +358,22 @@ export default function Profile() {
                     placeholder="San Jose"
                     maxLength={56}
                   />
+                </div>
+              </div>
+
+              {/* NEW: BIO FIELD */}
+              <div className="mb-3 mt-3">
+                <label className="form-label">Bio</label>
+                <textarea
+                  className="form-control"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Write a short bio about yourself..."
+                  rows={5}
+                  maxLength={500}
+                />
+                <div className="form-text">
+                  Max 500 characters.
                 </div>
               </div>
 
