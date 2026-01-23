@@ -83,6 +83,9 @@ export default function Profile() {
   // NEW: Bio field
   const [bio, setBio] = useState("");
 
+  // NEW: Top 10 favorite movies (simple text list)
+  const [favoriteMovies, setFavoriteMovies] = useState(() => Array.from({ length: 10 }, () => ""));
+
   // UI state
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
@@ -98,6 +101,11 @@ export default function Profile() {
 
     // NEW: keep bio in sync
     setBio(profile?.bio || "");
+
+    // NEW: keep favorite movies in sync (always keep 10 inputs)
+    const fromProfile = Array.isArray(profile?.favoriteMovies) ? profile.favoriteMovies : [];
+    const normalized = Array.from({ length: 10 }, (_, i) => (fromProfile[i] ? String(fromProfile[i]) : ""));
+    setFavoriteMovies(normalized);
 
     // If profile appears for the first time, stop forcing editing view
     if (profile) setEditing(false);
@@ -149,6 +157,16 @@ export default function Profile() {
     // NEW: limit bio length
     if (nextBio.length > 500) return "Bio is too long (max 500 characters).";
 
+    // NEW: validate favorite movies length and max per item
+    const cleanedMovies = (favoriteMovies || [])
+      .map((m) => safeTrim(m))
+      .filter(Boolean);
+
+    if (cleanedMovies.length > 10) return "Please keep favorite movies to 10 or fewer.";
+    for (const m of cleanedMovies) {
+      if (m.length > 80) return "Each favorite movie must be 80 characters or fewer.";
+    }
+
     return "";
   }
 
@@ -173,6 +191,11 @@ export default function Profile() {
     try {
       const ref = doc(db, "users", user.uid);
 
+      const cleanedFavoriteMovies = (favoriteMovies || [])
+        .map((m) => safeTrim(m))
+        .filter(Boolean)
+        .slice(0, 10);
+
       const payload = {
         uid: user.uid,
         email: user.email || "",
@@ -184,6 +207,9 @@ export default function Profile() {
 
         // NEW: bio saved to Firestore
         bio: safeTrim(bio) || "",
+
+        // NEW: favorite movies saved to Firestore
+        favoriteMovies: cleanedFavoriteMovies,
       };
 
       if (!profile) {
@@ -225,6 +251,11 @@ export default function Profile() {
     // NEW: revert bio too
     setBio(profile?.bio || "");
 
+    // NEW: revert favorite movies too
+    const fromProfile = Array.isArray(profile?.favoriteMovies) ? profile.favoriteMovies : [];
+    const normalized = Array.from({ length: 10 }, (_, i) => (fromProfile[i] ? String(fromProfile[i]) : ""));
+    setFavoriteMovies(normalized);
+
     setEditing(false);
   }
 
@@ -234,6 +265,20 @@ export default function Profile() {
 
   // NEW: saved bio for display
   const savedBio = safeTrim(profile?.bio);
+
+  // NEW: saved favorite movies for display
+  const savedFavoriteMovies = useMemo(() => {
+    const list = Array.isArray(profile?.favoriteMovies) ? profile.favoriteMovies : [];
+    return list.map((m) => safeTrim(m)).filter(Boolean).slice(0, 10);
+  }, [profile?.favoriteMovies]);
+
+  function updateFavoriteMovie(index, value) {
+    setFavoriteMovies((prev) => {
+      const next = Array.isArray(prev) ? [...prev] : Array.from({ length: 10 }, () => "");
+      next[index] = value;
+      return next;
+    });
+  }
 
   return (
     <div className="container py-4" style={{ maxWidth: 720 }}>
@@ -277,6 +322,24 @@ export default function Profile() {
                 <strong>Bio:</strong>
                 <div className="mt-1" style={{ whiteSpace: "pre-wrap" }}>
                   {savedBio ? savedBio : "Not set"}
+                </div>
+              </div>
+
+              {/* NEW: FAVORITE MOVIES DISPLAY */}
+              <div className="mt-3">
+                <strong>Top 10 favorite movies:</strong>
+                <div className="mt-2">
+                  {savedFavoriteMovies.length ? (
+                    <ol className="mb-0 ps-3">
+                      {savedFavoriteMovies.map((m, idx) => (
+                        <li key={`${m}-${idx}`} style={{ whiteSpace: "pre-wrap" }}>
+                          {m}
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <div>Not set</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -374,6 +437,27 @@ export default function Profile() {
                 />
                 <div className="form-text">
                   Max 500 characters.
+                </div>
+              </div>
+
+              {/* NEW: FAVORITE MOVIES FIELDS */}
+              <div className="mb-3">
+                <label className="form-label">Top 10 favorite movies</label>
+                <div className="row g-2">
+                  {favoriteMovies.map((m, idx) => (
+                    <div className="col-12" key={`fav-movie-${idx}`}>
+                      <input
+                        className="form-control"
+                        value={m}
+                        onChange={(e) => updateFavoriteMovie(idx, e.target.value)}
+                        placeholder={`${idx + 1}. Movie title`}
+                        maxLength={80}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="form-text">
+                  Add up to 10 movie titles. Leave blank to skip a slot. Max 80 characters each.
                 </div>
               </div>
 
