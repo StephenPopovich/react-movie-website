@@ -1,0 +1,62 @@
+.profile-page  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+.card-body{
+
+}
+
+.card-body:hover {
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.6);
+}
+
+strong{
+
+}
+
+.btn-outline-primary{
+    margin-top: 0.5rem;
+    background: linear-gradient(90deg, #2d004d, #a78bfa);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.btn-outline-primary:hover {
+    margin-top: 0.5rem;
+    background: linear-gradient(90deg, #a78bfa, #2d004d);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+
+/* Small phones (up to 480px)*/
+
+@media (max-width: 480px) {
+
+}
+
+/*Tablets and large phones (up to 768px) */
+
+@media (max-width: 768px) {
+
+}
+
+/* 
+   Small laptops (up to 1024px) */
+
+@media (max-width: 1024px) {
+
+}
+
+/* Desktops (1025px and up) */
+
+@media (min-width: 1025px) {
+
+}

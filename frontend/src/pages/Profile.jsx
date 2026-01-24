@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useAuth } from "../context/AuthContext";
+import "../css/Profile.css";
 
 function safeTrim(s) {
   return (s || "").trim();
@@ -281,7 +282,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="container py-4" style={{ maxWidth: 720 }}>
+    <div className="container py-4 profile-page" style={{ maxWidth: 720 }}>
       <h1 className="mb-3">Profile</h1>
 
       {/* TOP CARD: SHOW SAVED PROFILE DATA */}
@@ -330,7 +331,7 @@ export default function Profile() {
                 <strong>Top 10 favorite movies:</strong>
                 <div className="mt-2">
                   {savedFavoriteMovies.length ? (
-                    <ol className="mb-0 ps-3">
+                    <ol className="mb-0 ps-3 favorite-movie-list">
                       {savedFavoriteMovies.map((m, idx) => (
                         <li key={`${m}-${idx}`} style={{ whiteSpace: "pre-wrap" }}>
                           {m}

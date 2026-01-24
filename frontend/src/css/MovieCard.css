@@ -101,15 +101,20 @@
 }
 
 .movie-info h3 {
-  font-size: 1rem;
-  line-height: 18px !important;
+  font-size: 1.15rem;
+  line-height: 20px !important;
   margin: 0;
   color: #fff;
 }
 
 .movie-info p {
-  color: #999;
+  color: #fff !important;
   font-size: 0.9rem;
+  margin-bottom: 0rem !important;
+}
+
+.movie-info a{
+  color: #fff !important;
 }
 
 .user-rating {
