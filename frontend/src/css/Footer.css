@@ -15,10 +15,13 @@
   transition:background 220ms ease-in-out;
   -webkit-text-stroke: 0.5px #000;
   text-shadow: 0 0 1px rgba(0, 0, 0, .6);
+  background-image: url(/images/movie-theater-carpet-background.webp);
+  background-size: contain;
 }
 
 .footer:hover{ 
-  background:linear-gradient(270deg,#2d004d,#a78bfa); 
+   background-image: url(/images/movie-theater-carpet-background.webp);
+  background-size: contain;
 }
 /* Small phones (up to 480px)*/
 
