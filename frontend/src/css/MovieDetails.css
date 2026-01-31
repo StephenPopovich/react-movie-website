@@ -1,8 +1,13 @@
 /* frontend/src/css/MovieDetails.css */
+main{
+  background-image: url(/images/movie-theater-background.webp);
+  background-size: cover;
+  padding-bottom: 550px;
+}
+
 .mdp-page {
   padding: 1.5rem 2rem;
   color: #fff;
-  background: #242424;
   min-height: 100vh;
 }
 

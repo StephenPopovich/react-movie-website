@@ -1,3 +1,9 @@
+main{
+  background-image: url(/images/movie-theater-background.webp);
+  background-size: cover;
+  padding-bottom: 550px;
+}
+
 .mytopten-page {
   margin: 2rem;
 }

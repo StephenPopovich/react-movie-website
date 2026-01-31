@@ -1,4 +1,10 @@
 /* frontend/src/styles/chatroom.css */
+main{
+  background-image: url(/images/movie-theater-background.webp);
+  background-size: cover;
+  padding-bottom: 550px;
+}
+
 .chatroom-page {
   padding: 2rem 1rem;
   display: flex;

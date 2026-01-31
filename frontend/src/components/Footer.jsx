@@ -21,7 +21,7 @@ function Footer() {
   }, []);
 
   return (
-    <footer className="footer site-footer text-light mt-5 py-4">
+    <footer className="footer site-footer text-light py-4">
       <div className="footer-runner" ref={runnerRef} aria-hidden="true">
         <img
           className="footer-runner__img"
