@@ -2,10 +2,20 @@
     background: #242424;
 }
 .about-page {
-    background: #242424;
+  background-image: url(/images/about-background.webp);
+  background-position-y: 340px;
+  background-repeat: no-repeat;
+  background-color: #344355;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 18rem 1.5rem;
+  border-radius: 45px;
+}
+
+.about-content{
+    background-color: #344355;
+    padding: .5rem;
+    border-radius: 45px;
 }
 
 .about-hero h1 {
@@ -61,13 +71,15 @@ ul{
 /* Small phones (up to 480px)*/
 
 @media (max-width: 480px) {
-
+  background-image: url(/images/about-background.webp);
+  background-position-y: 540px;
 }
 
 /*Tablets and large phones (up to 768px) */
 
 @media (max-width: 768px) {
-
+  background-image: url(/images/about-background.webp);
+  background-position-y: 640px;
 }
 
 /* 

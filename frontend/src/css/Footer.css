@@ -144,6 +144,9 @@
 
 /* Desktops (1025px and up) */
 @media (min-width: 1025px) {
+  .footer{
+  max-height: 100px !important;
+  }
   .footer-runner{
     bottom: 6px;
   }
