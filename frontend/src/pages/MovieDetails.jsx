@@ -35,6 +35,13 @@ export default function MovieDetails() {
     return Array.isArray(movie?.credits?.cast) ? movie.credits.cast.slice(0, 8) : [];
   }, [movie]);
 
+  const directorName = useMemo(() => {
+    const crew = movie?.credits?.crew;
+    if (!Array.isArray(crew)) return "";
+    const director = crew.find((p) => p?.job === "Director");
+    return director?.name || "";
+  }, [movie]);
+
   const formattedReleaseDate = useMemo(() => {
     if (!movie?.release_date) return null;
     const d = new Date(movie.release_date);
@@ -70,6 +77,14 @@ export default function MovieDetails() {
                 <span className="mdp-fact-value">{formattedReleaseDate}</span>
               </li>
             )}
+
+            {directorName && (
+              <li>
+                <span className="mdp-fact-label">Director:</span>{" "}
+                <span className="mdp-fact-value">{directorName}</span>
+              </li>
+            )}
+
             {typeof movie.vote_average === "number" && (
               <li>
                 <span className="mdp-fact-label">Rating:</span>{" "}
