@@ -50,6 +50,15 @@ export default function MovieDetails() {
       : d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   }, [movie]);
 
+  // NEW (minimal): format budget for display
+  const formattedBudget = useMemo(() => {
+    const b = movie?.budget;
+    if (b === undefined || b === null) return null; // if truly missing, hide row
+    const n = Number(b);
+    if (!isFinite(n)) return null;
+    return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  }, [movie]);
+
   if (loading) return <div className="mdp-page mdp-status">Loading…</div>;
   if (err) return <div className="mdp-page mdp-status mdp-error">{err}</div>;
   if (!movie) return null;
@@ -82,6 +91,14 @@ export default function MovieDetails() {
               <li>
                 <span className="mdp-fact-label">Director:</span>{" "}
                 <span className="mdp-fact-value">{directorName}</span>
+              </li>
+            )}
+
+            {/* NEW (minimal): Budget row under Director */}
+            {formattedBudget && (
+              <li>
+                <span className="mdp-fact-label">Budget:</span>{" "}
+                <span className="mdp-fact-value">{formattedBudget}</span>
               </li>
             )}
 
